@@ -3,10 +3,10 @@
     android:layout_height="match_parent"
     tools:context="com.citious.converfit.Actividades.Favorites.ListFavoritesActivity">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lstListFavBrandActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lstListFavBrandActivity"
-        android:background="@color/Blanco" />
+        android:background="@color/Blanco"/>
 
 </RelativeLayout>

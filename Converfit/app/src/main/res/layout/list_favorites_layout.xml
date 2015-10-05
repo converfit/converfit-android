@@ -4,12 +4,23 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cabecera_list_users"
+        android:text="@string/conectados"
+        android:visibility="visible"
+        android:background="@color/Fondo_Gris_Coverfit"
+        android:textColor="@color/Fondo_cabecera_chats_tab"
+        android:textSize="16sp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"/>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="UselessParent">
-
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -46,7 +57,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:orientation="horizontal"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
@@ -70,5 +81,8 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/Fondo_Gris_Coverfit"/>
 </LinearLayout>

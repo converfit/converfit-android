@@ -56,4 +56,8 @@ public class NavDraweItem {
     public void setUserKey(String userKey) {
         this.userKey = userKey;
     }
+
+    public void setHoraConectado(String horaConectado) {
+        this.horaConectado = horaConectado;
+    }
 }

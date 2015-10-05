@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -41,7 +43,8 @@ import java.util.List;
 
 public class ListFavoritesFragment extends Fragment {
     Context miContext;
-    ListView miListViewFav;
+    //ListView miListViewFav;
+    private RecyclerView recyclerView;
     ProgressDialog pd;
     RecuperarBrandsFavoritas thread;
     String tituloAlert = "";
@@ -65,7 +68,7 @@ public class ListFavoritesFragment extends Fragment {
         View v = inflater.inflate(R.layout.activity_list_favorites,container,false);
 
         miContext = getActivity();
-        miListViewFav = (ListView)v.findViewById(R.id.lstListFavBrandActivity);
+        /*miListViewFav = (ListView)v.findViewById(R.id.lstListFavBrandActivity);
         miListViewFav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -77,12 +80,15 @@ public class ListFavoritesFragment extends Fragment {
                 }
             }
         });
-
+        */
         accesoDatos = new UserSqlite(miContext);
         miUserList = accesoDatos.devolverUsers();
         ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-        miListViewFav.setAdapter(miAdapter);
-        registerForContextMenu(miListViewFav);
+        //miListViewFav.setAdapter(miAdapter);
+        //registerForContextMenu(miListViewFav);
+        recyclerView = (RecyclerView) v.findViewById(R.id.lstListFavBrandActivity);
+        recyclerView.setAdapter(miAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         hayFavoritos();
         setHasOptionsMenu(true);
@@ -95,7 +101,7 @@ public class ListFavoritesFragment extends Fragment {
         miUserList = accesoDatos.devolverUsers();
         hayFavoritos();
         ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-        miListViewFav.setAdapter(miAdapter);
+        recyclerView.setAdapter(miAdapter);
         if(Conexion.isInternetAvailable(miContext)) {
             thread = new RecuperarBrandsFavoritas();
             thread.execute();
@@ -109,7 +115,7 @@ public class ListFavoritesFragment extends Fragment {
             miUserList = accesoDatos.devolverUsers();
             hayFavoritos();
             ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-            miListViewFav.setAdapter(miAdapter);
+            recyclerView.setAdapter(miAdapter);
             if(Conexion.isInternetAvailable(miContext)) {
                 thread = new RecuperarBrandsFavoritas();
                 thread.execute();
@@ -182,7 +188,7 @@ public class ListFavoritesFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 miUserList = accesoDatos.devolverUserBuscado(query);
                 ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                miListViewFav.setAdapter(miAdapter);
+                recyclerView.setAdapter(miAdapter);
                 return false;
             }
 
@@ -191,29 +197,26 @@ public class ListFavoritesFragment extends Fragment {
                 if ((newText.equalsIgnoreCase("") || newText.isEmpty()) && textoBuscado.isEmpty()) {
                     miUserList = accesoDatos.devolverUsers();
                     ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                    miListViewFav.setAdapter(miAdapter);
+                    recyclerView.setAdapter(miAdapter);
                 }
                 return false;
             }
         });
     }
 
+    /*
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId()==R.id.lstListFavBrandActivity) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
             int posicion = info.position;
-            menu.setHeaderTitle(miUserList.get(posicion).getFname()+ " " + miUserList.get(posicion).getLname());
+            menu.setHeaderTitle(miUserList.get(posicion).getUserName());
             String[] menuItems = getResources().getStringArray(R.array.opciones_menu_contextual_list_favorites);
             for (int i = 0; i<2; i++) {
                 String texto = "";
                 if(i == 0){
-                    if(miUserList.get(posicion).isUserBlocked()){
-                        texto = menuItems[1];
-                    }else{
-                        texto = menuItems[0];
-                    }
+                    texto = menuItems[0];
                 }else{
                     texto = menuItems[2];//Obtener informacion empresa
                 }
@@ -221,6 +224,7 @@ public class ListFavoritesFragment extends Fragment {
             }
         }
     }
+
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -244,13 +248,13 @@ public class ListFavoritesFragment extends Fragment {
                     miUserList = accesoDatos.devolverUsers();
                     ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
                     miAdapter.notifyDataSetChanged();
-                    miListViewFav.setAdapter(miAdapter);
+                    recyclerView.setAdapter(miAdapter);
                     break;
             }
         }
         return false;
     }
-
+*/
     public class RecuperarBrandsFavoritas extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -302,13 +306,13 @@ public class ListFavoritesFragment extends Fragment {
                     } else if (needUpdate) {
                         miUserList = accesoDatos.devolverUsers();
                         ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                        miListViewFav.setAdapter(miAdapter);
-                        registerForContextMenu(miListViewFav);
+                        recyclerView.setAdapter(miAdapter);
+                        registerForContextMenu(recyclerView);
                     }
                 } else if (borrarFavoritosnOk) {
                     miUserList = accesoDatos.devolverUsers();
                     ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                    miListViewFav.setAdapter(miAdapter);
+                    recyclerView.setAdapter(miAdapter);
                 }
             }
         }
@@ -319,7 +323,7 @@ public class ListFavoritesFragment extends Fragment {
         String url = Utils.devolverURLservidor("brands");
 
         List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "list_brand_users"));
+        pairs.add(new BasicNameValuePair("action", "list_users"));
         pairs.add(new BasicNameValuePair("session_key", sessionKey));
         pairs.add(new BasicNameValuePair("users_last_update", String.valueOf(Utils.obtenerFavoritoLastUpdate(miContext))));
         pairs.add(new BasicNameValuePair("offset", String.valueOf(offSet)));
@@ -336,7 +340,7 @@ public class ListFavoritesFragment extends Fragment {
                 if(resultado.equalsIgnoreCase("true")){
                     Utils.dbErrorContador = 0;
                     JSONObject data = datos.getJSONObject("data");
-                    String favoritesLastUpdate = data.getString("brand_users_last_update");
+                    String favoritesLastUpdate = data.getString("user_brand_sessions_last_update");
                     Utils.guardarFavoritosLastUpdate(miContext,favoritesLastUpdate);
                     needUpdate = data.getBoolean("need_to_update");
                     if(needUpdate) {
@@ -371,74 +375,11 @@ public class ListFavoritesFragment extends Fragment {
         }
     }
 
-    public class BlockUser extends AsyncTask<String, Void, String[]> {
-
-        @Override
-        protected String[] doInBackground(String... params) {
-            blockUser(params[0], params[1]);
-            return new String[] {params[0], params[1]};
-        }
-
-        //Se ecuta al finalizar el thread
-        @Override
-        protected void onPostExecute(String[] params) {
-            // Oculto la ventana de espera de conexión
-            if(mensajeError.length() > 0){
-                boolean bloqueado = false;
-                if(params[1].equalsIgnoreCase("unblock_user")){
-                    bloqueado = true;
-                }
-                accesoDatos.updateBloqueado(params[0], bloqueado);
-                miUserList = accesoDatos.devolverUsers();
-                ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                miAdapter.notifyDataSetChanged();
-                miListViewFav.setAdapter(miAdapter);
-                mostrarAlerta();
-            }
-        }
-    }
-
-    public void blockUser(String userKey, String accion){
-        String sessionKey = Utils.obtenerSessionKey(miContext);
-        String url = Utils.devolverURLservidor("brands");
-
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", accion));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("user_key", userKey));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
-        try {
-            JSONObject datos = post.getServerData(url, pairs);
-            if (datos != null && datos.length() > 0) {
-                // Para cada registro obtenido se extraen sus campos
-                String resultado = datos.getString("result");
-                if(resultado.equalsIgnoreCase("true")){
-                   Utils.dbErrorContador = 0;
-
-                }else{
-                    codigoError = datos.getString("error_code");
-                    desloguear = Utils.comprobarDesloguear(codigoError);
-                    String[] error = new Utils().devolverStringError(miContext, codigoError);
-                    tituloAlert = error[0];
-                    mensajeError = error[1];
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            String codigoError = getResources().getString(R.string.default_error);
-            String[] error = new Utils().devolverStringError(miContext,codigoError);
-            tituloAlert = error[0];
-            mensajeError = error[1];
-        }
-    }
-
     private void lanzarConversacion(int position){
         String userKey = miUserList.get(position).getUserKey();
         ConversationsSqlite accesoDatosConversations = new ConversationsSqlite(miContext);
         String conversationKey = accesoDatosConversations.existeConversacionDeUsuario(userKey);
-        String brandName = miUserList.get(position).getFname() + " " + miUserList.get(position).getLname();
+        String brandName = miUserList.get(position).getUserName();
         //Creamos el intent a lista mensajes
         Intent miListMessagesIntent = new Intent(miContext, ListMessagesAcitity.class);
         if(conversationKey.isEmpty()){

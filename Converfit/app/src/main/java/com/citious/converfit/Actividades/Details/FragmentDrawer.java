@@ -73,11 +73,11 @@ public class FragmentDrawer extends Fragment {
         // preparing navigation drawer items
         for (int i = 0; i < usersList.size(); i++) {
             NavDraweItem navItem = new NavDraweItem();
-            navItem.setUserName(usersList.get(i).getFname() + " " + usersList.get(i).getLname());
+            navItem.setUserName(usersList.get(i).getUserName());
             navItem.setAvatar(usersList.get(i).getAvatar());
-            navItem.setConectionStatus("");
+            navItem.setConectionStatus(usersList.get(i).getConectionStatus());
             navItem.setUserKey(usersList.get(i).getUserKey());
-            //navItem.setHoraConectado(usersList.get(i).getHoraConectado());
+            navItem.setHoraConectado(usersList.get(i).getHoraConectado());
             data.add(navItem);
         }
         return data;

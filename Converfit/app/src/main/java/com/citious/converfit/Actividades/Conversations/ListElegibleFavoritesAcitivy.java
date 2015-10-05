@@ -76,7 +76,7 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
         accesoDatos = new UserSqlite(miContext);
         miUserList = accesoDatos.devolverUsers();
         ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-        miListView.setAdapter(miAdapter);
+        //miListView.setAdapter(miAdapter);
         if(Conexion.isInternetAvailable(miContext)) {
             thread = new RecuperarBrandsFavoritas();
             thread.execute();
@@ -131,7 +131,7 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
             public boolean onQueryTextSubmit(String query) {
                 miUserList = accesoDatos.devolverUserBuscado(query);
                 ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                miListView.setAdapter(miAdapter);
+                //miListView.setAdapter(miAdapter);
                 return true;
             }
 
@@ -140,7 +140,7 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
                 if ((newText.equalsIgnoreCase("") || newText.isEmpty()) && textoBuscado.isEmpty()) {
                     miUserList = accesoDatos.devolverUsers();
                     ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                    miListView.setAdapter(miAdapter);
+                  //  miListView.setAdapter(miAdapter);
                 }
                 return false;
             }
@@ -223,7 +223,7 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
             }else if(needUpdate){
                 miUserList = accesoDatos.devolverUsers();
                 ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                miListView.setAdapter(miAdapter);
+                //miListView.setAdapter(miAdapter);
             }
         }
     }
@@ -282,7 +282,7 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
         String userKey = miUserList.get(position).getUserKey();
         ConversationsSqlite accesoDatosConversations = new ConversationsSqlite(miContext);
         String conversationKey = accesoDatosConversations.existeConversacionDeUsuario(userKey);
-        String brandName = miUserList.get(position).getFname() + " " + miUserList.get(position).getLname();
+        String brandName = miUserList.get(position).getUserName();
         //Creamos el intent a lista mensajes
         Intent miListMessagesIntent = new Intent(miContext, ListMessagesAcitity.class);
         if(conversationKey.isEmpty()){

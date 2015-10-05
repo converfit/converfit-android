@@ -6,11 +6,8 @@ import org.json.JSONObject;
 public class UserModel {
     String userKey = "";
     String avatar = "";
-    String email = "";
-    String phone = "";
-    String fname = "";
-    String lname = "";
-    boolean userBlocked = false;
+    String userName = "";
+    String last_page_title = "" ;
     String conectionStatus = "";
     String horaConectado = "";
 
@@ -18,31 +15,23 @@ public class UserModel {
     public UserModel(JSONObject aDict){
         try {
             this.userKey = aDict.getString("user_key");
-            this.avatar = aDict.getString("avatar");
-            this.email = aDict.getString("email");
-            this.phone = aDict.getString("phone");
-            this.fname = aDict.getString("fname");
-            this.lname = aDict.getString("lname");
-            String blocked = aDict.getString("blocked");
-            if(blocked.equalsIgnoreCase("0")){
-                userBlocked = false;
-            }else{
-                userBlocked = true;
-            }
+            this.avatar = aDict.getString("user_avatar");
+            this.userName = aDict.getString("user_name");
+            this.last_page_title = aDict.getString("last_page_title");
+            this.conectionStatus = aDict.getString("connection-status");
+            this.horaConectado = aDict.getString("last_connection");
+
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public UserModel(String anUserKey, String anAvatar, String anEmail, String aPhone, String aFname, String aLname, boolean blocked, String aConectionStatus, String anHoraConectado) {
+    public UserModel(String anUserKey, String anAvatar, String userName, String lastPage, String aConectionStatus, String anHoraConectado) {
         this.userKey = anUserKey;
         this.avatar = anAvatar;
-        this.email = anEmail;
-        this.phone = aPhone;
-        this.fname = aFname;
-        this.lname = aLname;
-        this.userBlocked = blocked;
+        this.userName = userName;
+        this.last_page_title = lastPage;
         this.conectionStatus = aConectionStatus;
         this.horaConectado = anHoraConectado;
     }
@@ -55,33 +44,19 @@ public class UserModel {
         return avatar;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-
-    public String getPhone() {
-        return phone;
-    }
-
-
-    public String getFname() {
-        return fname;
-    }
-
-    public String getLname() {
-        return lname;
-    }
-
-    public boolean isUserBlocked() {
-        return userBlocked;
-    }
-
     public String getConectionStatus() {
         return conectionStatus;
     }
 
     public String getHoraConectado() {
         return horaConectado;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getLast_page_title() {
+        return last_page_title;
     }
 }

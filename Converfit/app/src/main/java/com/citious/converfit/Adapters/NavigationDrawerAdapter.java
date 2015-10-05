@@ -80,7 +80,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                 lanzarConversacion(position);
             }
         });
-        //holder.hora.setText(Utils.devolverTiempo(current.getHoraConectado()));
+        holder.hora.setText(Utils.devolverTiempo(current.getHoraConectado()));
         holder.hora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
