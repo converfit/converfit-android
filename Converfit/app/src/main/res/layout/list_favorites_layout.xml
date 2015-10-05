@@ -37,7 +37,7 @@
             android:layout_gravity="center">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/txt_brand_name_list_favorites_layout"
@@ -45,7 +45,7 @@
                 android:textColor="@color/nombres_chat_tab"
                 android:layout_marginBottom="3dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/txt_last_page_User"

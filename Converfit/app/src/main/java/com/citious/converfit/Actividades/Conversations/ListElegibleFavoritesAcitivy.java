@@ -10,18 +10,16 @@ import android.os.AsyncTask;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 import com.citious.converfit.AccesoDatos.Conexion;
 import com.citious.converfit.AccesoDatos.Post;
-import com.citious.converfit.AccesoDatos.Sqlite.ConversationsSqlite;
 import com.citious.converfit.AccesoDatos.Sqlite.UserSqlite;
 import com.citious.converfit.Actividades.Details.MyCustomDialog;
 import com.citious.converfit.Adapters.ListUserAdapter;
@@ -39,7 +37,7 @@ import java.util.List;
 public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
 
     Context miContext;
-    ListView miListView;
+    private RecyclerView recyclerView;
     ProgressDialog pd;
     RecuperarBrandsFavoritas thread;
     String tituloAlert = "";
@@ -65,18 +63,14 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.title_activity_list_favorites));
         miContext = this;
-        miListView = (ListView)findViewById(R.id.lstListElegibleFavctivity);
-        miListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                lanzarConversacion(position);
-            }
-        });
 
         accesoDatos = new UserSqlite(miContext);
         miUserList = accesoDatos.devolverUsers();
         ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-        //miListView.setAdapter(miAdapter);
+        recyclerView = (RecyclerView) findViewById(R.id.lstListElegibleFavctivity);
+        recyclerView.setAdapter(miAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(miContext));
+
         if(Conexion.isInternetAvailable(miContext)) {
             thread = new RecuperarBrandsFavoritas();
             thread.execute();
@@ -131,7 +125,8 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
             public boolean onQueryTextSubmit(String query) {
                 miUserList = accesoDatos.devolverUserBuscado(query);
                 ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                //miListView.setAdapter(miAdapter);
+                recyclerView = (RecyclerView) findViewById(R.id.lstListElegibleFavctivity);
+                recyclerView.setAdapter(miAdapter);
                 return true;
             }
 
@@ -140,7 +135,8 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
                 if ((newText.equalsIgnoreCase("") || newText.isEmpty()) && textoBuscado.isEmpty()) {
                     miUserList = accesoDatos.devolverUsers();
                     ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                  //  miListView.setAdapter(miAdapter);
+                    recyclerView = (RecyclerView) findViewById(R.id.lstListElegibleFavctivity);
+                    recyclerView.setAdapter(miAdapter);
                 }
                 return false;
             }
@@ -223,7 +219,8 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
             }else if(needUpdate){
                 miUserList = accesoDatos.devolverUsers();
                 ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                //miListView.setAdapter(miAdapter);
+                recyclerView = (RecyclerView) findViewById(R.id.lstListElegibleFavctivity);
+                recyclerView.setAdapter(miAdapter);
             }
         }
     }
@@ -276,22 +273,5 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
             tituloAlert = error[0];
             mensajeError = error[1];
         }
-    }
-
-    private void lanzarConversacion(int position){
-        String userKey = miUserList.get(position).getUserKey();
-        ConversationsSqlite accesoDatosConversations = new ConversationsSqlite(miContext);
-        String conversationKey = accesoDatosConversations.existeConversacionDeUsuario(userKey);
-        String brandName = miUserList.get(position).getUserName();
-        //Creamos el intent a lista mensajes
-        Intent miListMessagesIntent = new Intent(miContext, ListMessagesAcitity.class);
-        if(conversationKey.isEmpty()){
-            miListMessagesIntent.putExtra("elegibleFavoritesOrigin", true);
-        }else{
-            miListMessagesIntent.putExtra("conversationKey", conversationKey);
-        }
-        miListMessagesIntent.putExtra("brandName", brandName);
-        miListMessagesIntent.putExtra("userkey", userKey);
-        startActivity(miListMessagesIntent);
     }
 }

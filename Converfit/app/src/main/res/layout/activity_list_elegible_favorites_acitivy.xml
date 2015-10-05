@@ -8,10 +8,11 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         />
-    <ListView
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lstListElegibleFavctivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lstListElegibleFavctivity"
         android:background="@color/Blanco"
         android:layout_below="@+id/list_elegible_fav_tool_bar"/>
 

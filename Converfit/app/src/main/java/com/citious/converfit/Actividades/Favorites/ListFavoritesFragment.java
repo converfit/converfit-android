@@ -14,15 +14,12 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 import com.citious.converfit.AccesoDatos.Conexion;
 import com.citious.converfit.AccesoDatos.Post;
@@ -43,7 +40,6 @@ import java.util.List;
 
 public class ListFavoritesFragment extends Fragment {
     Context miContext;
-    //ListView miListViewFav;
     private RecyclerView recyclerView;
     ProgressDialog pd;
     RecuperarBrandsFavoritas thread;
@@ -53,7 +49,6 @@ public class ListFavoritesFragment extends Fragment {
     int limit = 1000;
     ArrayList<UserModel> miUserList = new ArrayList<>();
     String codigoError = "";
-    int tapPosicionConversacion = 0;
     boolean borrarFavoritosnOk = false;
     boolean buscandoMas = false;
     SearchView searchView;
@@ -68,24 +63,10 @@ public class ListFavoritesFragment extends Fragment {
         View v = inflater.inflate(R.layout.activity_list_favorites,container,false);
 
         miContext = getActivity();
-        /*miListViewFav = (ListView)v.findViewById(R.id.lstListFavBrandActivity);
-        miListViewFav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                boolean isSubBrand = Utils.obtenerIsGroupSubBrand(miContext);
-                if(!isSubBrand) {
-                    offSet = 0;
-                    buscandoMas = false;
-                    lanzarConversacion(position);
-                }
-            }
-        });
-        */
+
         accesoDatos = new UserSqlite(miContext);
         miUserList = accesoDatos.devolverUsers();
         ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-        //miListViewFav.setAdapter(miAdapter);
-        //registerForContextMenu(miListViewFav);
         recyclerView = (RecyclerView) v.findViewById(R.id.lstListFavBrandActivity);
         recyclerView.setAdapter(miAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -204,57 +185,6 @@ public class ListFavoritesFragment extends Fragment {
         });
     }
 
-    /*
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId()==R.id.lstListFavBrandActivity) {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-            int posicion = info.position;
-            menu.setHeaderTitle(miUserList.get(posicion).getUserName());
-            String[] menuItems = getResources().getStringArray(R.array.opciones_menu_contextual_list_favorites);
-            for (int i = 0; i<2; i++) {
-                String texto = "";
-                if(i == 0){
-                    texto = menuItems[0];
-                }else{
-                    texto = menuItems[2];//Obtener informacion empresa
-                }
-                menu.add(Menu.NONE, i, i, texto);
-            }
-        }
-    }
-
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        if(getUserVisibleHint()) {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            tapPosicionConversacion = info.position;
-            int indexMenu = item.getItemId();
-            String userKey = miUserList.get(tapPosicionConversacion).getUserKey();
-            switch (indexMenu) {
-                case 0:
-                    String accion = "";
-                    if(miUserList.get(tapPosicionConversacion).isUserBlocked()){
-                        accesoDatos.updateBloqueado(userKey, false);
-                        accion = "unblock_user";
-                    }else{
-                        accesoDatos.updateBloqueado(userKey, true);
-                        accion = "block_user";
-                    }
-                    BlockUser theadBlockUser = new BlockUser();
-                    theadBlockUser.execute(userKey, accion);
-                    miUserList = accesoDatos.devolverUsers();
-                    ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
-                    miAdapter.notifyDataSetChanged();
-                    recyclerView.setAdapter(miAdapter);
-                    break;
-            }
-        }
-        return false;
-    }
-*/
     public class RecuperarBrandsFavoritas extends AsyncTask<Void, Void, Void> {
 
         @Override

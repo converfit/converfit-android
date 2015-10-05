@@ -1,6 +1,7 @@
 package com.citious.converfit.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.citious.converfit.AccesoDatos.Sqlite.ConversationsSqlite;
+import com.citious.converfit.Actividades.Conversations.ListMessagesAcitity;
 import com.citious.converfit.Models.UserModel;
 import com.citious.converfit.R;
 import com.citious.converfit.Utils.Utils;
@@ -38,7 +42,7 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(ListUserAdapter.MyViewHolder myViewHolder, int position) {
+    public void onBindViewHolder(ListUserAdapter.MyViewHolder myViewHolder, final int position) {
         current = data.get(position);
         if(position == 0){
             myViewHolder.cabecera.setVisibility(View.VISIBLE);
@@ -59,11 +63,23 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.MyView
         Bitmap foto = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         if(foto != null) {
             myViewHolder.iconoUser.setImageBitmap(Utils.getRoundedBitmap(foto));
+            myViewHolder.iconoUser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    lanzarConversacion(position);
+                }
+            });
         }
 
         //Cargamos el nombre del usuario
         String nombreUsuarioCompuesto = current.getUserName();
         myViewHolder.userName.setText(nombreUsuarioCompuesto);
+        myViewHolder.userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lanzarConversacion(position);
+            }
+        });
 
         if(current.getConectionStatus().equalsIgnoreCase("online")){
             myViewHolder.iconoStatus.setImageResource(R.drawable.connection_status_online_50);
@@ -74,9 +90,27 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.MyView
         }else{
             myViewHolder.iconoStatus.setImageResource(R.drawable.connection_status_mobile_50);
         }
+        myViewHolder.iconoStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lanzarConversacion(position);
+            }
+        });
 
         myViewHolder.hora.setText(Utils.devolverTiempo(current.getHoraConectado()));
+        myViewHolder.hora.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lanzarConversacion(position);
+            }
+        });
         myViewHolder.ultimaActividad.setText(current.getLast_page_title());
+        myViewHolder.ultimaActividad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lanzarConversacion(position);
+            }
+        });
     }
 
     @Override
@@ -103,70 +137,20 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.MyView
         }
     }
 
-    /*
-    @Override
-    public int getCount() {
-        return userList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return userList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View vi = convertView;
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) miContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            vi = inflater.inflate(R.layout.list_favorites_layout, null);
-        }
-
-        //Obtenemos el listado de datos de una posicion
-        UserModel item = userList.get(position);
-
-        //Cargamos el icono
-        ImageView icono = (ImageView) vi.findViewById(R.id.img_brand_avatar_list_favorites_layout);
-        byte[] decodedString = Base64.decode(item.getAvatar(), Base64.DEFAULT);
-        Bitmap foto = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
-        //Cargamos el nombre del usuario
-        String nombreUsuarioCompuesto = item.getFname() + " " + item.getLname();
-
-        TextView name = (TextView) vi.findViewById(R.id.txt_brand_name_list_favorites_layout);
-        name.setText(nombreUsuarioCompuesto);
-
-        if(item.isUserBlocked()){
-            if(foto != null) {
-                icono.setImageBitmap(Utils.getRoundedBitmap(foto));
-            }
-            vi.setAlpha(0.5f);
+    private void lanzarConversacion(int position){
+        String userKey = data.get(position).getUserKey();
+        ConversationsSqlite accesoDatosConversations = new ConversationsSqlite(miContext);
+        String conversationKey = accesoDatosConversations.existeConversacionDeUsuario(userKey);
+        String brandName = data.get(position).getUserName();
+        //Creamos el intent a lista mensajes
+        Intent miListMessagesIntent = new Intent(miContext, ListMessagesAcitity.class);
+        if(conversationKey.isEmpty()){
+            miListMessagesIntent.putExtra("elegibleFavoritesOrigin", true);
         }else{
-            if(foto != null) {
-                icono.setImageBitmap(Utils.getRoundedBitmap(foto));
-            }
-            vi.setAlpha(1f);
+            miListMessagesIntent.putExtra("conversationKey", conversationKey);
         }
-
-        ImageView statusImage = (ImageView) vi.findViewById(R.id.bntimg_brand_fav_list_favorites_layout);
-        if(item.getConectionStatus().equalsIgnoreCase("online")){
-            statusImage.setImageResource(R.drawable.connection_status_online_50);
-        }else if(item.getConectionStatus().equalsIgnoreCase("offline")){
-            statusImage.setImageResource(R.drawable.connection_status_offline_50);
-        }else if(item.getConectionStatus().equalsIgnoreCase("inactive")){
-            statusImage.setImageResource(R.drawable.connection_status_inactive_50);
-        }else{
-            statusImage.setImageResource(R.drawable.connection_status_mobile_50);
-        }
-
-        TextView horaUsuario = (TextView) vi.findViewById(R.id.hora_usuario_conectado_chat_tab);
-        //horaUsuario.setText(Utils.devolverTiempo(item.getHoraConectado()));
-        return vi;
+        miListMessagesIntent.putExtra("brandName", brandName);
+        miListMessagesIntent.putExtra("userkey", userKey);
+        miContext.startActivity(miListMessagesIntent);
     }
-    */
 }
