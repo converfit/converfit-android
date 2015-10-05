@@ -230,7 +230,7 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
         String url = Utils.devolverURLservidor("brands");
 
         List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "list_brand_users"));
+        pairs.add(new BasicNameValuePair("action", "list_users"));
         pairs.add(new BasicNameValuePair("session_key", sessionKey));
         pairs.add(new BasicNameValuePair("users_last_update", String.valueOf(Utils.obtenerFavoritoLastUpdate(miContext))));
         pairs.add(new BasicNameValuePair("offset", String.valueOf(offSet)));
@@ -247,7 +247,7 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
                 if(resultado.equalsIgnoreCase("true")){
                     Utils.dbErrorContador = 0;
                     JSONObject data = datos.getJSONObject("data");
-                    String favoritesLastUpdate = data.getString("brand_users_last_update");
+                    String favoritesLastUpdate = data.getString("users_last_update");
                     Utils.guardarFavoritosLastUpdate(miContext, favoritesLastUpdate);
                     needUpdate = data.getBoolean("need_to_update");
                     if(needUpdate) {

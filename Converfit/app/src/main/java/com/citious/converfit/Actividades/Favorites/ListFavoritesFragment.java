@@ -270,7 +270,7 @@ public class ListFavoritesFragment extends Fragment {
                 if(resultado.equalsIgnoreCase("true")){
                     Utils.dbErrorContador = 0;
                     JSONObject data = datos.getJSONObject("data");
-                    String favoritesLastUpdate = data.getString("user_brand_sessions_last_update");
+                    String favoritesLastUpdate = data.getString("users_last_update");
                     Utils.guardarFavoritosLastUpdate(miContext,favoritesLastUpdate);
                     needUpdate = data.getBoolean("need_to_update");
                     if(needUpdate) {
