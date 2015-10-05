@@ -56,7 +56,10 @@ public class ListConversationsAdapter extends BaseAdapter {
         ImageView icono = (ImageView)vi.findViewById(R.id.img_brand_avatar_list_conversations_layout);
         byte[] decodedString = Base64.decode(conversationsList.get(position).getAvatar(), Base64.DEFAULT);
         Bitmap foto = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        icono.setImageBitmap(Utils.getRoundedBitmap(foto));
+
+        if(foto != null){
+            icono.setImageBitmap(Utils.getRoundedBitmap(foto));
+        }
 
         //Cargamos el nombre del usuario
         TextView name = (TextView) vi.findViewById(R.id.txt_brand_name_list_conversations_layout);
@@ -87,6 +90,17 @@ public class ListConversationsAdapter extends BaseAdapter {
             lastMessage.setTypeface(null, Typeface.NORMAL);
             lastMessage.setTextColor(miContext.getResources().getColor(R.color.GrisMensajeAlert));
             lastMessageDate.setTextColor(miContext.getResources().getColor(R.color.GrisMensajeAlert));
+        }
+
+        ImageView conectionStatus = (ImageView) vi.findViewById(R.id.bntimg_brand_fav_list_conversations_layout);
+        if(item.getConectionStatus().equalsIgnoreCase("online")){
+            conectionStatus.setImageResource(R.drawable.connection_status_online_50);
+        }else if(item.getConectionStatus().equalsIgnoreCase("offline")){
+            conectionStatus.setImageResource(R.drawable.connection_status_offline_50);
+        }else if(item.getConectionStatus().equalsIgnoreCase("inactive")){
+            conectionStatus.setImageResource(R.drawable.connection_status_inactive_50);
+        }else{
+            conectionStatus.setImageResource(R.drawable.connection_status_mobile_50);
         }
 
 

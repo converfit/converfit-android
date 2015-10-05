@@ -20,12 +20,10 @@ public class ConversationsSqlite {
     public static final String FLAGNEWUSERMESSAGE_CONVERSATION = "flagNewuserMessage";
     public static final String LASTMESSAGE_CONVERSATION = "lastMessage";
     public static final String LASTUPDATE_CONVERSATION = "lastUpdate";
-    public static final String ASSIGNEDFNAME_CONVERSATION = "assignedFname";
-    public static final String ASSIGNEDID_CONVERSATION = "assignedId";
-    public static final String ASSIGNEDLNAME_CONVERSATION = "assignedLname";
     public static final String USERKEY_CONVERSATION = "userKey";
     public static final String FNAME_CONVERSATION = "fname";
     public static final String LNAME_CONVERSATION = "lname";
+    public static final String CONECTIONSTATUS_CONVERSATION = "conectionStatus";
 
     // Instancias de la base de datos y de la clase BaseDatosHelper
     private SQLiteDatabase database;
@@ -63,12 +61,10 @@ public class ConversationsSqlite {
         values.put(FLAGNEWUSERMESSAGE_CONVERSATION, conversation.isFlagNewMesssageUser());
         values.put(LASTMESSAGE_CONVERSATION, conversation.getLastMessage());
         values.put(LASTUPDATE_CONVERSATION, conversation.getLastUpdate());
-        values.put(ASSIGNEDFNAME_CONVERSATION, conversation.getAssignedFname());
-        values.put(ASSIGNEDID_CONVERSATION, conversation.getAssignedId());
-        values.put(ASSIGNEDLNAME_CONVERSATION, conversation.getAssignedLname());
         values.put(USERKEY_CONVERSATION, conversation.getUserKey());
         values.put(FNAME_CONVERSATION, conversation.getFname());
         values.put(LNAME_CONVERSATION, conversation.getLname());
+        values.put(CONECTIONSTATUS_CONVERSATION, conversation.getConectionStatus());
         return values;
     }
 
@@ -93,14 +89,12 @@ public class ConversationsSqlite {
                     boolean flagNewuserMessage = (elCursor.getString(3)).equals("1");
                     String lastMessage = elCursor.getString(4);
                     String lastUpdate = elCursor.getString(5);
-                    String assignedFname = elCursor.getString(6);
-                    String assignedId = elCursor.getString(7);
-                    String assignedLname = elCursor.getString(8);
-                    String userKey = elCursor.getString(9);
-                    String fname = elCursor.getString(10);
-                    String lname = elCursor.getString(11);
+                    String userKey = elCursor.getString(6);
+                    String fname = elCursor.getString(7);
+                    String lname = elCursor.getString(8);
+                    String conectionStatus = elCursor.getString(9);
                     ConversationModel conversation = new ConversationModel(conversationKey, avatar, creationLastMessage, flagNewuserMessage, lastMessage, lastUpdate,
-                            assignedFname, assignedId, assignedLname, userKey, fname, lname);
+                            userKey, fname, lname,conectionStatus);
                     miConversationList.add(conversation);
                 } while (elCursor.moveToNext());
             }
@@ -243,67 +237,6 @@ public class ConversationsSqlite {
         }
 
         return hayMensajesSinLeer;
-    }
-
-    //Devolvemos la id, el fname y el lname del Admin assignado
-    public String[] devolverAdminAsignadoConversacion(String conversationKey, Context miContext){
-        String idAdminAssigned = "";
-        String fnameAdminAssigned = "";
-        String lnameAdminAssigned = "";
-        try {
-            // Abrir la base de datos para lectura
-            database = dbHelper.getReadableDatabase();
-            // Crear un Cursor con todos los elementos de la tabla
-            if(conversationKey == null || conversationKey.isEmpty()){
-                idAdminAssigned = Utils.obtenerIdLogin(miContext);
-                fnameAdminAssigned = Utils.obtenerFnameLogin(miContext);
-                lnameAdminAssigned = Utils.obtenerLnameLogin(miContext);
-            }else {
-                Cursor elCursor = database.query(CONVERSATION_TABLE_NAME, null, CONVERSATIONKEY_CONVERSATION + "=?", new String[]{conversationKey}
-                        , null, null, null);
-                if (elCursor.moveToFirst()) {
-                    fnameAdminAssigned = elCursor.getString(6);
-                    idAdminAssigned = elCursor.getString(7);
-                    lnameAdminAssigned = elCursor.getString(8);
-                }
-                elCursor.close();
-            }
-        } catch (Exception e) {
-            Log.e("MIO", "La exception de todosUser es " + e.toString());
-            // Devolver el cursor
-        }
-        return new String[]{idAdminAssigned, fnameAdminAssigned, lnameAdminAssigned};
-    }
-
-    //Metodo para cambiar el admin asignado de la conversacion
-    public void cambiarAdminAsignadoConversacion(Context miContext, String conversationKey, String idAdminAssing){
-        long numReg;
-        // Abrir la base de datos para escritura
-        database = dbHelper.getWritableDatabase();
-        // Crear el objeto ContentValues con los nombres de los campos del
-        // registro a insertar
-        ContentValues initialValues = updatecambiarAdminAsignadoConversacions(miContext, idAdminAssing);
-        // Insertar el registro directamente en la tabla
-        numReg = database.update(CONVERSATION_TABLE_NAME, initialValues, CONVERSATIONKEY_CONVERSATION + "=?",
-                new String[]{String.valueOf(conversationKey)});
-        // Cerrar la base de datos
-        dbHelper.close();
-        // Devolver el número de registro insertado o -1 si hubo algún error
-    }
-
-    // Crear el objeto ContentValues con los datos a insertar en la tabla de Politicas
-    private ContentValues updatecambiarAdminAsignadoConversacions(Context miContext, String idAdminAssign) {
-        String fname = "";
-        String lname = "";
-        if(idAdminAssign.equalsIgnoreCase(Utils.obtenerIdLogin(miContext))){
-            fname = Utils.obtenerFnameLogin(miContext);
-            lname = Utils.obtenerLnameLogin(miContext);
-        }
-        ContentValues values = new ContentValues();
-        values.put(ASSIGNEDID_CONVERSATION, idAdminAssign);
-        values.put(ASSIGNEDFNAME_CONVERSATION, fname);
-        values.put(ASSIGNEDLNAME_CONVERSATION, lname);
-        return values;
     }
 
     public String existeConversacionDeUsuario(String userKey){

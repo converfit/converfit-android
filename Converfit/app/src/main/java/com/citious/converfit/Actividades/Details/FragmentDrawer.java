@@ -2,6 +2,9 @@ package com.citious.converfit.Actividades.Details;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,6 +54,11 @@ public class FragmentDrawer extends Fragment {
     private float lastTranslate = 0.0f;
     Context miContext;
     UserSqlite accesoDatos;
+    String tituloAlert = "";
+    String mensajeError = "";
+    boolean desloguear = false;
+    boolean needUpdate = false;
+    boolean mostrarGooglePlay = false;
 
     public FragmentDrawer() {
 
@@ -282,9 +290,13 @@ public class FragmentDrawer extends Fragment {
         //Se ecuta al finalizar el thread
         @Override
         protected void onPostExecute(Void result) {
-            usersList = accesoDatos.devolverUsers();
-            adapter = new NavigationDrawerAdapter(miContext, getData());
-            recyclerView.setAdapter(adapter);
+            if (mensajeError.length() > 0) {
+                mostrarAlerta();
+            }else if (needUpdate) {
+                usersList = accesoDatos.devolverUsers();
+                adapter = new NavigationDrawerAdapter(miContext, getData());
+                recyclerView.setAdapter(adapter);
+            }
         }
     }
 
@@ -312,7 +324,7 @@ public class FragmentDrawer extends Fragment {
                     JSONObject data = datos.getJSONObject("data");
                     String favoritesLastUpdate = data.getString("brand_users_last_update");
                     Utils.guardarFavoritosLastUpdate(miContext,favoritesLastUpdate);
-                    boolean needUpdate = data.getBoolean("need_to_update");
+                    needUpdate = data.getBoolean("need_to_update");
                     if(needUpdate) {
                         accesoDatos.borrarAllUsers();
                         JSONArray brands = data.getJSONArray("users");
@@ -322,9 +334,11 @@ public class FragmentDrawer extends Fragment {
                         }
                     }
                 }else{
-                    //codigoError = datos.getString("error_code");
-                    //desloguear = Utils.comprobarDesloguear(codigoError);
-                    //mensajeError = new Utils().devolverStringError(miContext,codigoError);
+                    String codigoError = datos.getString("error_code");
+                    desloguear = Utils.comprobarDesloguear(codigoError);
+                    String[] error = new Utils().devolverStringError(miContext, codigoError);
+                    tituloAlert = error[0];
+                    mensajeError = error[1];
                 }
             }
         } catch (Exception e) {
@@ -351,5 +365,34 @@ public class FragmentDrawer extends Fragment {
                 ad.cancel();
             }
         });
+    }
+
+    private void mostrarAlerta(){
+        MyCustomDialog miConstructor = new MyCustomDialog(miContext, tituloAlert, mensajeError);
+        String tituloBoton = getResources().getString(R.string.aceptar_alert);
+        mostrarGooglePlay = false;
+        if(mensajeError.equalsIgnoreCase(getResources().getString(R.string.app_version_error))){
+            mostrarGooglePlay = true;
+            tituloBoton = getResources().getString(R.string.google_play);
+        }
+        // Definimos el botón y sus acciones
+        AlertDialog dialog = miConstructor.setNegativeButton(tituloBoton, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                mensajeError = "";
+                dialog.cancel();// se cancela la ventana
+                if(desloguear){
+                    desloguear = false;
+                    Utils.desLoguear(miContext);
+                    getActivity().finish();
+                }else if(mostrarGooglePlay){
+                    final String appPackageName = miContext.getPackageName();
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("market://details?id=" + appPackageName));
+                    startActivity(intent);
+                }
+            }
+        }).show();
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(16);
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.Rojo));
     }
 }

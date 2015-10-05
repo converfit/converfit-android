@@ -101,8 +101,7 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
                     desloguear = false;
                     Utils.desLoguear(miContext);
                     finish();
-                }
-                if(mostrarGooglePlay){
+                }else if(mostrarGooglePlay){
                     final String appPackageName = getPackageName();
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=" + appPackageName));

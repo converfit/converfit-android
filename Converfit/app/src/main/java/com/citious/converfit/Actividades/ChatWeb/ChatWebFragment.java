@@ -204,7 +204,11 @@ public class ChatWebFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 mensajeError = "";
                 dialog.cancel();// se cancela la ventana
-                if(mostrarGooglePlay){
+                if(desloguear){
+                    desloguear = false;
+                    Utils.desLoguear(miContext);
+                    getActivity().finish();
+                }else if(mostrarGooglePlay){
                     final String appPackageName = miContext.getPackageName();
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=" + appPackageName));

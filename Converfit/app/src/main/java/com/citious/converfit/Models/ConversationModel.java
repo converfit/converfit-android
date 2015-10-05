@@ -11,12 +11,10 @@ public class ConversationModel {
     boolean flagNewMesssageUser = false;
     String lastMessage = "";
     String lastUpdate = "0";
-    String assignedFname = "";
-    String assignedId = "";
-    String assignedLname = "";
     String userKey = "";
     String fname = "";
     String lname = "";
+    String conectionStatus = "";
 
 
     public ConversationModel(JSONObject aDict) {
@@ -43,14 +41,10 @@ public class ConversationModel {
             }
             this.lastUpdate = "0";
 
-            JSONObject assignedAdminDict = aDict.getJSONObject("assigned_admin");
-            this.assignedFname = assignedAdminDict.getString("fname");
-            this.assignedId = assignedAdminDict.getString("id_admin");
-            this.assignedLname = assignedAdminDict.getString("lname");
-
             JSONObject userDict = aDict.getJSONObject("user");
             this.userKey = userDict.getString("user_key");
             this.avatar = userDict.getString("avatar");
+            conectionStatus = userDict.getString("connection-status");
 
             this.fname = aDict.getString("user_fname");
             this.lname = aDict.getString("user_lname");
@@ -61,19 +55,17 @@ public class ConversationModel {
     }
 
     public ConversationModel(String aConversationKey, String anAvatar, String aLastMessageCreation, boolean aFlagNewMessageUser, String aLastMessage, String aLastUpdate,
-                             String anAssignedFname, String anAssignedId, String anAssignedLname, String anUserKey, String aFname, String aLname) {
+                             String anUserKey, String aFname, String aLname, String conectionStatus) {
         this.conversationKey = aConversationKey;
         this.avatar = anAvatar;
         this.lastMessageCreation = aLastMessageCreation;
         this.flagNewMesssageUser = aFlagNewMessageUser;
         this.lastMessage = aLastMessage;
         this.lastUpdate = aLastUpdate;
-        this.assignedFname = anAssignedFname;
-        this.assignedId = anAssignedId;
-        this.assignedLname = anAssignedLname;
         this.userKey = anUserKey;
         this.fname = aFname;
         this.lname = aLname;
+        this.conectionStatus = conectionStatus;
     }
 
     public String getConversationKey() {
@@ -109,21 +101,6 @@ public class ConversationModel {
     }
 
 
-    public String getAssignedFname() {
-        return assignedFname;
-    }
-
-
-    public String getAssignedId() {
-        return assignedId;
-    }
-
-
-    public String getAssignedLname() {
-        return assignedLname;
-    }
-
-
     public String getUserKey() {
         return userKey;
     }
@@ -139,5 +116,9 @@ public class ConversationModel {
 
     public String getLname() {
         return lname;
+    }
+
+    public String getConectionStatus() {
+        return conectionStatus;
     }
 }

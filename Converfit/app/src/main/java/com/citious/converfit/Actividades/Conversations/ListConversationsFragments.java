@@ -237,8 +237,7 @@ public class ListConversationsFragments extends Fragment {
                     desloguear = false;
                     Utils.desLoguear(miContext);
                     getActivity().finish();
-                }
-                if(mostrarGooglePlay){
+                }else if(mostrarGooglePlay){
                     final String appPackageName = miContext.getPackageName();
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=" + appPackageName));

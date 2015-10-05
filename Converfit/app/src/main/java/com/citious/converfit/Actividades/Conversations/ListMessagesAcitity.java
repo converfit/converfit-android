@@ -128,7 +128,6 @@ public class ListMessagesAcitity extends ActionBarActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    asignarAdmin();
                     tipo = "text";
                     contenido = miEditText.getText().toString();
                     if (contenido.trim().length() > 0) {
@@ -241,7 +240,6 @@ public class ListMessagesAcitity extends ActionBarActivity {
         ocultarTEclado();
         establecerTituloCabecera();
         if(requestCode == TAKE_PICTURE && resultCode == RESULT_OK){
-            asignarAdmin();
             File f = new File(Environment.getExternalStorageDirectory().toString());
             for (File temp : f.listFiles()) {
                 if (temp.getName().equals("temp.jpg")) {
@@ -253,7 +251,6 @@ public class ListMessagesAcitity extends ActionBarActivity {
             Bitmap photo = BitmapFactory.decodeFile(f.getAbsolutePath(),bitmapOptions);
             enviarImagen(photo);
         }else if(requestCode == GALLERY_PICTURE && resultCode == RESULT_OK){
-            asignarAdmin();
             Uri selectedImage = data.getData();
             InputStream is;
             try {
@@ -375,8 +372,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
                     desloguear = false;
                     Utils.desLoguear(miContext);
                     finish();
-                }
-                if(mostrarGooglePlay){
+                }else if(mostrarGooglePlay){
                     final String appPackageName = getPackageName();
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=" + appPackageName));
@@ -860,19 +856,6 @@ public class ListMessagesAcitity extends ActionBarActivity {
     //Metodo para establecer el titulo de la cabecera
     private void establecerTituloCabecera(){
         getSupportActionBar().setTitle(brandName);
-    }
-
-    ////Metodo para comprobar al enviar un mensaje nuevo si el admin asignado es el que envia el mensaje y sino asignarsela
-    private void asignarAdmin(){
-        ConversationsSqlite accesoDatosConversations = new ConversationsSqlite(miContext);
-        String idAdminAsignado = accesoDatosConversations.devolverAdminAsignadoConversacion(conversationKey, miContext)[0];
-        if (idAdminAsignado.equalsIgnoreCase("0")){
-            String idAdminLogado = Utils.obtenerIdLogin(miContext);
-            CambiarAdminAsignado cambiarAdminThread = new CambiarAdminAsignado();
-            cambiarAdminThread.execute(Integer.parseInt(idAdminLogado));
-            accesoDatosConversations.cambiarAdminAsignadoConversacion(miContext, conversationKey, idAdminLogado);
-            establecerTituloCabecera();
-        }
     }
 
     //Metodo para llamar al WS para cambiar el admin asignado

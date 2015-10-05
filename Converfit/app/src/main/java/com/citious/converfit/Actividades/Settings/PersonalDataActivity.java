@@ -174,7 +174,11 @@ public class PersonalDataActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int which) {
                 mensajeError = "";
                 dialog.cancel();// se cancela la ventana
-                if(mostrarGooglePlay){
+                if(desloguear){
+                    desloguear = false;
+                    Utils.desLoguear(miContext);
+                    finish();
+                }else if(mostrarGooglePlay){
                     final String appPackageName = getPackageName();
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=" + appPackageName));

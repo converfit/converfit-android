@@ -72,34 +72,15 @@ public class RecoverPassordAcitivy extends ActionBarActivity {
                     thread.execute();
                 }else{
                     mensajeError = getResources().getString(R.string.conexion_error);
-                    String tituloAlerta = getResources().getString(R.string.error);
-                    mostrarAlerta(tituloAlerta);
+                    tituloAlert = getResources().getString(R.string.error);
+                    mostrarAlerta();
                 }
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void mostrarAlerta(String tituloAlerta){
-        /*AlertDialog.Builder miConstructor = new AlertDialog.Builder(this);
-        miConstructor.setMessage(mensajeError); // Definir el mensaje del diálogo
-        miConstructor.setTitle(tituloAlerta);
-        // Definimos el botón y sus acciones
-        miConstructor.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                mensajeError = "";
-                dialog.cancel();// se cancela la ventana
-                if(desloguear){
-                    desloguear = false;
-                    Utils.desLoguear(miContext);
-                    finish();
-                }
-            }});
-        // Crear una instancia del diálogo de tipo alerta a través del constructor
-        AlertDialog miAlerta = miConstructor.create();
-        //Mostramos el alert
-        miAlerta.show();*/
-
+    private void mostrarAlerta(){
         MyCustomDialog miConstructor = new MyCustomDialog(miContext, tituloAlert, mensajeError);
         String tituloBoton = getResources().getString(R.string.aceptar_alert);
         mostrarGooglePlay = false;
@@ -116,8 +97,7 @@ public class RecoverPassordAcitivy extends ActionBarActivity {
                     desloguear = false;
                     Utils.desLoguear(miContext);
                     finish();
-                }
-                if(mostrarGooglePlay){
+                }else if(mostrarGooglePlay){
                     final String appPackageName = getPackageName();
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=" + appPackageName));
@@ -168,15 +148,10 @@ public class RecoverPassordAcitivy extends ActionBarActivity {
         protected void onPostExecute(Void result) {
             // Oculto la ventana de espera de conexión
             pd.dismiss();
-
-            String tituloAlerta;
             if(recuOK){
-                tituloAlerta = getResources().getString(R.string.revisar_titulo);
+                tituloAlert = getResources().getString(R.string.revisar_titulo);
             }
-            else{
-                tituloAlerta = getResources().getString(R.string.error);
-            }
-            mostrarAlerta(tituloAlerta);
+            mostrarAlerta();
         }
     }
 
