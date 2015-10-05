@@ -121,7 +121,6 @@
     <string name="llamar">Llamar</string>
     <string name="elegir_opcion">Elija una opción</string>
     <string-array name="opciones_menu_contextual_list_conversations">
-        <item name="crear">Obtener información del usuario.</item>
         <item name="iniciar">Eliminar Conversacion.</item>
     </string-array>
     <string-array name="opciones_menu_contextual_list_favorites">
