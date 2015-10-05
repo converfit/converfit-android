@@ -167,4 +167,6 @@
     <string name="chat_desactivado_drawer">CHAT DESACTIVADO</string>
     <string name="alert_sheet_desactivar_chat">Desactivar chat</string>
     <string name="title_activity_user_time_line">UserTimeLine</string>
+    <string name="conectados">CONECTADOS</string>
+    <string name="citious_app">CITIOUS APP</string>
 </resources>

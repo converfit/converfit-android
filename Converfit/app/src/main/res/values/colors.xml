@@ -12,6 +12,8 @@
     <color name="fondo_drawer_chat">#30394b</color>
     <color name="hora_drawer">#ffffff</color>
     <color name="estado_chat_drawer">#c6cbd5</color>
+    <color name="color_fondo_cabecera_drawer">#212833</color>
+    <color name="separator_drawer">#565d6f</color>
     <color name="transparente">#00000000</color>
     <color name="Blanco">#FFFFFF</color>
     <color name="Rojo">#C11814</color>

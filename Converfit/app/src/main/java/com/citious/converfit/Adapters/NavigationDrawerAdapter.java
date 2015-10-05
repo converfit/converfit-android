@@ -47,6 +47,20 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         current = data.get(position);
+        if(position == 0){
+            holder.cabecera.setVisibility(View.VISIBLE);
+            if(current.getConectionStatus().equalsIgnoreCase("mobile")){
+                holder.cabecera.setText(context.getResources().getString(R.string.citious_app));
+            }
+        }else {
+            boolean cambiarTituloCabecera = !current.getConectionStatus().equalsIgnoreCase(data.get(position - 1).getConectionStatus());
+            if(cambiarTituloCabecera){
+                holder.cabecera.setVisibility(View.VISIBLE);
+            }else{
+                holder.cabecera.setVisibility(View.GONE);
+            }
+        }
+
         holder.userName.setText(current.getUserName());
         holder.userName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +112,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView cabecera;
         TextView userName;
         ImageView iconoUser;
         ImageView iconoStatus;
@@ -105,6 +120,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            cabecera = (TextView) itemView.findViewById(R.id.cabecera_recycled_drawer);
             userName = (TextView) itemView.findViewById(R.id.txt_brand_name_drawer);
             iconoUser = (ImageView) itemView.findViewById(R.id.img_brand_avatar_drawer);
             iconoStatus = (ImageView)itemView.findViewById(R.id.bntimg_brand_fav_list_drawer);
