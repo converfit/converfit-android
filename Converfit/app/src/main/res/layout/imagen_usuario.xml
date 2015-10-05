@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="false">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:id="@+id/img_imagen_usuario"
+            android:clickable="true"
+            android:scaleType="centerCrop"
+            android:background="@drawable/shape_usuario"
+            android:layout_marginRight="3dp"/>
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:text="@string/exclamacion_reenviar_mensaje"
+            android:textColor="@color/Blanco"
+            android:background="@drawable/shape_boton_reenviar"
+            android:id="@+id/btn_reenviar_mensaje_imagen"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+</RelativeLayout>

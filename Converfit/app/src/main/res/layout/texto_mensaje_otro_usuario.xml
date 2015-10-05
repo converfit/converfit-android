@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/Blanco">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/shape_otro_usuario"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/txt_mensaje_otro_usuario"
+            android:gravity="start"
+            android:background="@color/Fondo_Gris_Coverfit"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:textSize="14sp"
+            android:maxWidth="210dp"
+            android:autoLink="all"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/txt_hora_mensaje_otro_usuario_usuario"
+            android:layout_gravity="bottom"
+            android:background="@color/Fondo_Gris_Coverfit"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:textSize="10sp"
+            android:alpha="0.7"
+            android:singleLine="true"/>
+
+    </LinearLayout>
+</RelativeLayout>

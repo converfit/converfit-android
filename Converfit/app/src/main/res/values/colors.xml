@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="RojoFondo">#ed1f24</color>
+    <color name="RojoCabecera">#c1151e</color>
+    <color name="NaranjaVersionLogin">#f28367</color>
+    <color name="TextoLogin">#e9e9e9</color>
+    <color name="Fondo_Gris_Coverfit">#e9e9e9</color>
+    <color name="Fondo_cabecera_chats_tab">#bbbbbb</color>
+    <color name="nombres_chat_tab">#212121</color>
+    <color name="Negro_nuevo_mensjae">#111111</color>
+    <color name="bloquear_usuario">#F4F4F4</color>
+    <color name="fondo_drawer_chat">#30394b</color>
+    <color name="hora_drawer">#ffffff</color>
+    <color name="estado_chat_drawer">#c6cbd5</color>
+    <color name="transparente">#00000000</color>
+    <color name="Blanco">#FFFFFF</color>
+    <color name="Rojo">#C11814</color>
+    <color name="AzulMensaje">#267BBA</color>
+    <color name="tabsScrollColor">#8a140e</color>
+    <color name="Negro">#000000</color>
+    <color name="AmarilloStar">#ffffa133</color>
+    <color name="VerdeBurbujasUsuario">#ECFFD3</color>
+    <color name="VerdeColorHoraMensaje">#7CAB61</color>
+    <color name="BlancoSemitransparente">#33FFFFFF</color>
+    <color name="GrisMensajeAlert">#909090</color>
+        <array name="colors">
+            <item>@color/RojoFondo</item>
+            <item>@color/RojoCabecera</item>
+            <item>@color/NaranjaVersionLogin</item>
+            <item>@color/TextoLogin</item>
+            <item>@color/Fondo_Gris_Coverfit</item>
+            <item>@color/Fondo_cabecera_chats_tab</item>
+            <item>@color/nombres_chat_tab</item>
+            <item>@color/Negro_nuevo_mensjae</item>
+            <item>@color/bloquear_usuario</item>
+            <item>@color/fondo_drawer_chat</item>
+            <item>@color/hora_drawer</item>
+            <item>@color/estado_chat_drawer</item>
+            <item>@color/Blanco</item>
+            <item>@color/Rojo</item>
+            <item>@color/AzulMensaje</item>
+            <item>@color/tabsScrollColor</item>
+            <item>@color/Negro</item>
+            <item>@color/AmarilloStar</item>
+            <item>@color/VerdeBurbujasUsuario</item>
+            <item>@color/VerdeColorHoraMensaje</item>
+            <item>@color/BlancoSemitransparente</item>
+            <item>@color/GrisMensajeAlert</item>
+        </array>
+</resources>

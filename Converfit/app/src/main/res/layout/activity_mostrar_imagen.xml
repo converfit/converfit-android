@@ -1,0 +1,17 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.citious.converfit.Actividades.Conversations.MostrarImagenActivity">
+    <include
+        android:id="@+id/mostrar_imagen_tool_bar"
+        layout="@layout/tool_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
+
+    <WebView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/photo_webView"
+        android:layout_below="@+id/mostrar_imagen_tool_bar" />
+</RelativeLayout>

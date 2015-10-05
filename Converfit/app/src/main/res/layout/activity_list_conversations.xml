@@ -1,0 +1,12 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.citious.converfit.Actividades.Conversations.ListConversationsActivity"
+    android:background="@color/Fondo_Gris_Coverfit">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lstListConversationsActivity"
+        android:background="@color/Blanco"/>
+</RelativeLayout>

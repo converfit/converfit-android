@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.citious.converfit.Actividades.Conversations.ListConversationsActivity">
+    <item
+        android:id="@+id/seleccionar_brand"
+        android:title="pruebaTexto"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/compose"/>
+</menu>

@@ -1,0 +1,113 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.citious.converfit.Actividades.UserAcces.WelcomeActivity"
+    android:background="@color/RojoFondo">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_converfit_logo"
+        android:layout_above="@+id/login_linear_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:src="@drawable/converfit_logo_white_600"
+        android:adjustViewBounds="true"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/shape_login"
+        android:id="@+id/login_linear_layout"
+        android:divider="?android:listDivider"
+        android:showDividers="middle"
+        android:weightSum="2">
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:textSize="16sp"
+            android:id="@+id/edtLoginCorreo"
+            android:hint="@string/email"
+            android:textColorHint="@color/TextoLogin"
+            android:textColor="@color/Negro"
+            android:padding="20dp"
+            android:background="@android:color/transparent"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:textSize="16sp"
+            android:id="@+id/edtLoginPass"
+            android:hint="@string/contraseña"
+            android:textColorHint="@color/TextoLogin"
+            android:textColor="@color/Negro"
+            android:padding="20dp"
+            android:background="@android:color/transparent"/>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/iniciar_sesion"
+        android:id="@+id/btn_iniciar_sesion"
+        android:textSize="15sp"
+        android:layout_below="@+id/login_linear_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/shape_button_login"
+        android:textColor="@color/Blanco" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/olvidar_contraseña"
+        android:id="@+id/txtLoginOlvidarContraseña"
+        android:textSize="10sp"
+        android:layout_below="@+id/btn_iniciar_sesion"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/Blanco"
+        android:clickable="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/registrar_login"
+        android:id="@+id/txt_registrar_login"
+        android:layout_above="@+id/version_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:textColor="@color/Blanco"
+        android:textSize="15sp"
+        android:clickable="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/version"
+        android:id="@+id/version_login"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:textSize="10sp"
+        android:textColor="@color/NaranjaVersionLogin"/>
+
+</RelativeLayout>

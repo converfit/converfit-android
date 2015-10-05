@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.citious.converfit.Actividades.Settings.RecoverPassordAcitivy"
+    android:background="@color/Fondo_Gris_Coverfit">
+
+    <include
+        android:id="@+id/advertencia_recover_pass_tool_bar"
+        layout="@layout/tool_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/advertencia_recover_pass_tool_bar"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/advertencia"
+            android:id="@+id/txt_advertencia_recover_pass"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/recuperar_pass_mensaje"
+            android:id="@+id/txt_mensaje_advertencia_recover_pass" />
+    </LinearLayout>
+</RelativeLayout>

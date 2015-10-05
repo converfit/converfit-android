@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/img_brand_avatar_list_favorites_layout"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/description_avatar"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4.5"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/txt_brand_name_list_favorites_layout"
+                android:textSize="18sp"
+                android:textColor="@color/nombres_chat_tab"
+                android:layout_marginBottom="3dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/txt_last_page_User"
+                android:textColor="@color/GrisMensajeAlert"
+                android:textSize="12sp"
+                android:text="pruebas"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="end">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/GrisMensajeAlert"
+                android:textSize="12sp"
+                android:id="@+id/hora_usuario_conectado_chat_tab"
+                android:layout_gravity="center_vertical"/>
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:id="@+id/bntimg_brand_fav_list_favorites_layout"
+                android:contentDescription="@string/description_fav"
+                android:src="@drawable/connection_status_online_50"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

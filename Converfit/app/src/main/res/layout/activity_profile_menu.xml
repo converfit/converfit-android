@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.citious.converfit.Actividades.Settings.ProfileMenuActivity"
+    android:background="@color/Fondo_Gris_Coverfit">
+
+    <include
+        android:id="@+id/profile_menu_tool_bar"
+        layout="@layout/tool_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/lstProfileMenu"
+        android:background="@color/Blanco"
+        android:layout_below="@+id/profile_menu_tool_bar"/>
+
+</RelativeLayout>

@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.citious.converfit.Actividades.Settings.RecoverPassordAcitivy">
+    <item
+        android:id="@+id/recuperar_pass_recover"
+        android:title="@string/recuperar_pass"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"/>
+</menu>

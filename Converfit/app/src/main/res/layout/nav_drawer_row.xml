@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:id="@+id/img_brand_avatar_drawer"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/description_avatar"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4.5"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/txt_brand_name_drawer"
+            android:textSize="14sp"
+            android:textColor="@color/Blanco"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="end">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/hora_drawer"
+                android:textSize="10sp"
+                android:id="@+id/hora_usuario_conectado_drawer"
+                android:layout_gravity="center_vertical"
+                android:text="15 min"/>
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:id="@+id/bntimg_brand_fav_list_drawer"
+                android:contentDescription="@string/description_fav"
+                android:src="@drawable/connection_status_online_50"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="3dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.citious.converfit.Actividades.Settings.PersonalDataActivity">
+
+    <include
+        android:id="@+id/personal_data_tool_bar"
+        layout="@layout/tool_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/personal_data_tool_bar"
+        tools:ignore="UselessParent">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:inputType="textCapWords|textPersonName"
+            android:hint="@string/nombre"
+            android:ems="10"
+            android:id="@+id/edt_nombre_personal_data"
+            android:textColor="@color/Negro" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:inputType="textCapWords|textPersonName"
+            android:hint="@string/apellidos"
+            android:ems="10"
+            android:id="@+id/edt_apellidos_personal_data"
+            android:textColor="@color/Negro" />
+
+    </LinearLayout>
+
+</RelativeLayout>

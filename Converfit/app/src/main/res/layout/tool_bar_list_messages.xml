@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/Fondo_Gris_Coverfit"
+    android:elevation="10dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnimg_camara_list_messages"
+            android:src="@android:drawable/ic_menu_camera"
+            android:layout_gravity="center"
+            android:background="@color/Fondo_Gris_Coverfit" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/edt_texto_mensaje_list_messages"
+            android:inputType="text|textCapSentences" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.Toolbar>

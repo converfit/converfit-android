@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.citious.converfit.Actividades.Settings.SettingsMenuActivity"
+    android:background="@color/Fondo_Gris_Coverfit">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lstSettingsMenu"
+            android:background="@color/Blanco"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="5dp"
+            android:text="@string/version"
+            android:layout_gravity="right"
+            android:textSize="10sp"/>
+    </LinearLayout>
+
+</RelativeLayout>

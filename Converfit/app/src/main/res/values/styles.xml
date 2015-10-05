@@ -1,0 +1,18 @@
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/Fondo_Gris_Coverfit</item>
+        <item name="colorPrimaryDark">@color/RojoCabecera</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="MyActionBar" parent="@style/ThemeOverlay.AppCompat.Dark">
+        <item name="android:background">@color/RojoFondo</item>
+        <item name="background">@color/Blanco</item>
+        <item name="popupTheme">@style/Theme.AppCompat.Light</item>
+    </style>
+
+    <style name="MyDarkToolbarStyle" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:background">@color/Fondo_Gris_Coverfit</item>
+        <item name="android:textColor">@color/Negro</item>
+    </style>
+</resources>

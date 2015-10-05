@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.citious.converfit" >
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <permission
+        android:name="com.citious.converfit.newgcm.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.citious.converfit.newgcm.permission.C2D_MESSAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".Actividades.UserAcces.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Actividades.UserAcces.WelcomeActivity"
+            android:label="@string/title_activity_welcome"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Actividades.Settings.ProfileMenuActivity"
+            android:label="@string/title_activity_profile_menu"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Actividades.Settings.PersonalDataActivity"
+            android:label="@string/title_activity_personal_data"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Actividades.Settings.PasswordMenuActivity"
+            android:label="@string/title_activity_password_menu"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Actividades.Settings.ChangePasswordActivity"
+            android:label="@string/title_activity_change_password"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Actividades.Settings.RecoverPassordAcitivy"
+            android:label="@string/title_activity_recover_passord_acitivy"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Actividades.Conversations.ListMessagesAcitity"
+            android:label="@string/title_activity_list_messages_acitity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name=".Contenedores.TabContenedoraActivity"
+            android:label="@string/title_activity_tab_contenedora"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Actividades.Conversations.ListElegibleFavoritesAcitivy"
+            android:label="@string/title_activity_list_elegible_favorites_acitivy"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <receiver
+            android:name=".Push.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.citious.converfit" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".Push.GCMIntentService" />
+
+        <activity
+            android:name=".Actividades.Conversations.MostrarImagenActivity"
+            android:label="@string/title_activity_mostrar_imagen" >
+        </activity>
+        <activity
+            android:name=".Actividades.Details.VisorPDFActivity"
+            android:label="@string/title_activity_visor_pdf"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Actividades.ChatWeb.UserTimeLine"
+            android:label="@string/title_activity_user_time_line"
+            android:screenOrientation="portrait">
+        </activity>
+    </application>
+
+</manifest>
