@@ -124,7 +124,8 @@ public class UserSqlite {
             // Abrir la base de datos para lectura
             database = dbHelper.getReadableDatabase();
 
-            String sql = "WHERE " + USERNAME_USER + " LIKE '%" + textoBuscado + "%'";
+            //String sql = "WHERE " + USERNAME_USER + " LIKE '%" + textoBuscado + "%'";
+            String sql = "WHERE " + CONECTIONSTATUS_USER +" <> '"+ "mobile" + "'"+ " AND " + USERNAME_USER + " LIKE '%" + textoBuscado + "%'"+" ORDER BY " + HORACONECTADO_USER + " DESC";
             String selectQuery = "SELECT * FROM " + USER_TABLE_NAME + " " + sql;
             // Crear un Cursor con todos los elementos de la tabla
             Cursor elCursor = database.rawQuery(selectQuery, null);
@@ -141,6 +142,23 @@ public class UserSqlite {
                 } while (elCursor.moveToNext());
             }
             elCursor.close();
+            String sqlMobil = "WHERE " + CONECTIONSTATUS_USER +" = '"+ "mobile" + "'"+ " AND " + USERNAME_USER + " LIKE '%" + textoBuscado + "%'"+" ORDER BY " + HORACONECTADO_USER + " DESC";
+            String selectQeryMobile = "SELECT * FROM " + USER_TABLE_NAME + " " + sqlMobil;//Obtenemos los usuarios que esten desde el mobil
+            Cursor elCursorMobil = database.rawQuery(selectQeryMobile,null);
+            if(elCursorMobil.moveToFirst()) {
+                do {
+                    //Se recogen los datos del registro actual, solo recogemos el refran
+                    String userKey = elCursorMobil.getString(0);
+                    String avatar = elCursorMobil.getString(1);
+                    String userName = elCursorMobil.getString(2);
+                    String lastPageTitle = elCursorMobil.getString(3);
+                    String conectionStatus = elCursorMobil.getString(4);
+                    String horaConectado = elCursorMobil.getString(5);
+                    UserModel user = new UserModel(userKey, avatar, userName,lastPageTitle, conectionStatus, horaConectado);
+                    miUserList.add(user);
+                } while (elCursorMobil.moveToNext());
+            }
+            elCursorMobil.close();
         } catch (Exception e) {
             Log.e("MIO", "La exception de todosUser es " + e.toString());
             // Devolver el cursor
