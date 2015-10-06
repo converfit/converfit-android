@@ -60,6 +60,7 @@ public class FragmentDrawer extends Fragment {
     boolean needUpdate = false;
     boolean mostrarGooglePlay = false;
     TextView txtEstadoChat;
+    String accionActivarDesactivar = "";
 
     public FragmentDrawer() {
 
@@ -104,6 +105,8 @@ public class FragmentDrawer extends Fragment {
         // Inflating view layout
         final View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         txtEstadoChat = (TextView) layout.findViewById(R.id.status_chat_drawer);
+        RecuperarEstadoChat estadoThread = new RecuperarEstadoChat();
+        estadoThread.execute();
 
         miBotonAjustes = (ImageView) layout.findViewById(R.id.ajustes_button_drawer);
         miBotonAjustes.setOnClickListener(new View.OnClickListener() {
@@ -425,11 +428,21 @@ public class FragmentDrawer extends Fragment {
         final AlertDialog ad = alertSheet.show();
         ad.getWindow().setGravity(Gravity.BOTTOM);
 
+        String estatusChat = Utils.obtenerWebChatStatus(miContext);
+        if(estatusChat.equalsIgnoreCase("0")){
+            alertSheet.miBtnDesactivar.setText(miContext.getResources().getString(R.string.alert_sheet_activar_chat));
+            accionActivarDesactivar = "1";
+        }else{
+            alertSheet.miBtnDesactivar.setText(miContext.getResources().getString(R.string.alert_sheet_desactivar_chat));
+            accionActivarDesactivar = "0";
+        }
+
         alertSheet.miBtnDesactivar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ad.cancel();
-                Toast.makeText(miContext, "Desactivar", Toast.LENGTH_SHORT).show();
+                ChangeEstadoChat changeThread = new ChangeEstadoChat();
+                changeThread.execute();
             }
         });
 
@@ -468,5 +481,74 @@ public class FragmentDrawer extends Fragment {
         }).show();
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(16);
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.Rojo));
+    }
+
+    public class ChangeEstadoChat extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            cambiarEstadoChat();
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        //Se ejecuta cuando se cancela el hilo
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+        //Se ejecuta cuando se realiza la llamada publishProgress()
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+
+        }
+
+        //Se ecuta al finalizar el thread
+        @Override
+        protected void onPostExecute(Void result) {
+            String estadoChat = Utils.obtenerWebChatStatus(miContext);
+            if(estadoChat.equalsIgnoreCase("0")){
+                txtEstadoChat.setText(miContext.getResources().getString(R.string.chat_desactivado_drawer));
+            }else{
+                txtEstadoChat.setText(miContext.getResources().getString(R.string.chat_activado_drawer));
+            }
+        }
+    }
+
+    public void cambiarEstadoChat(){
+        String sessionKey = Utils.obtenerSessionKey(miContext);
+        String url = Utils.devolverURLservidor("webchat");
+
+        List<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("action", "update_brand_webchat_status"));
+        pairs.add(new BasicNameValuePair("session_key", sessionKey));
+        pairs.add(new BasicNameValuePair("webchat_status", accionActivarDesactivar));
+
+        Post post = new Post();
+        try {
+            JSONObject datos = post.getServerData(url, pairs);
+            if (datos != null && datos.length() > 0) {
+                // Para cada registro obtenido se extraen sus campos
+                String resultado = datos.getString("result");
+                if(resultado.equalsIgnoreCase("true")){
+                    Utils.dbErrorContador = 0;
+                    Utils.guardarWebChatStatus(miContext, accionActivarDesactivar);
+                }else{
+                    String codigoError = datos.getString("error_code");
+                    desloguear = Utils.comprobarDesloguear(codigoError);
+                    String[] error = new Utils().devolverStringError(miContext, codigoError);
+                    tituloAlert = error[0];
+                    mensajeError = error[1];
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
