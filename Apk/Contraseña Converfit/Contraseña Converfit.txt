@@ -1,0 +1,8 @@
+Password: C1t10us@C0nv3rf1t
+Confirm: C1t10us@C0nv3rf1t
+
+Alias: myAndroidAliasConverfit
+Password: C1t10us@C0nv3rf1t
+Confirm: C1t10us@C0nv3rf1t
+
+Master Key: C1t10us@M4nu3l

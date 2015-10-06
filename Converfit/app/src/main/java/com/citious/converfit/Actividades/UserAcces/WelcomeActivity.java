@@ -67,7 +67,7 @@ public class WelcomeActivity extends Activity {
         miRegistarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.converfit.com/app/es/recover_password/index.html"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.converfit.com/app/es/signup/index.html"));
                 startActivity(browserIntent);
             }
         });
