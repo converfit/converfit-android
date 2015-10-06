@@ -85,7 +85,7 @@ public class UserSqlite {
             Cursor elCursorMobil = database.rawQuery(selectQeryMobile,null);
             if(elCursorMobil.moveToFirst()) {
                 do {
-                    //Se recogen los datos del registro actual, solo recogemos el refran
+                    //Se recogen los datos del registro actual
                     String userKey = elCursorMobil.getString(0);
                     String avatar = elCursorMobil.getString(1);
                     String userName = elCursorMobil.getString(2);
@@ -116,7 +116,7 @@ public class UserSqlite {
         return numReg;
     }
 
-    //Busca una brand favorita a partir de un texto
+    //Busca un usuario a partir de un texto
     //Devolvemos todas las brands
     public ArrayList<UserModel> devolverUserBuscado(String textoBuscado){
         ArrayList<UserModel> miUserList = new ArrayList<>();
@@ -124,7 +124,6 @@ public class UserSqlite {
             // Abrir la base de datos para lectura
             database = dbHelper.getReadableDatabase();
 
-            //String sql = "WHERE " + USERNAME_USER + " LIKE '%" + textoBuscado + "%'";
             String sql = "WHERE " + CONECTIONSTATUS_USER +" <> '"+ "mobile" + "'"+ " AND " + USERNAME_USER + " LIKE '%" + textoBuscado + "%'"+" ORDER BY " + HORACONECTADO_USER + " DESC";
             String selectQuery = "SELECT * FROM " + USER_TABLE_NAME + " " + sql;
             // Crear un Cursor con todos los elementos de la tabla
@@ -147,7 +146,7 @@ public class UserSqlite {
             Cursor elCursorMobil = database.rawQuery(selectQeryMobile,null);
             if(elCursorMobil.moveToFirst()) {
                 do {
-                    //Se recogen los datos del registro actual, solo recogemos el refran
+                    //Se recogen los datos del registro actual
                     String userKey = elCursorMobil.getString(0);
                     String avatar = elCursorMobil.getString(1);
                     String userName = elCursorMobil.getString(2);

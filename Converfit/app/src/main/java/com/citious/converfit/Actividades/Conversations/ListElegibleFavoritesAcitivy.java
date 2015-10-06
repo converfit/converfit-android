@@ -127,7 +127,7 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
                 ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
                 recyclerView = (RecyclerView) findViewById(R.id.lstListElegibleFavctivity);
                 recyclerView.setAdapter(miAdapter);
-                return true;
+                return false;
             }
 
             @Override
