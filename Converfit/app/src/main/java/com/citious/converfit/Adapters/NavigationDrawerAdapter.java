@@ -55,6 +55,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
         }else {
             boolean cambiarTituloCabecera = !current.getConectionStatus().equalsIgnoreCase(data.get(position - 1).getConectionStatus());
             if(cambiarTituloCabecera){
+                holder.cabecera.setText(context.getResources().getString(R.string.citious_app));
                 holder.cabecera.setVisibility(View.VISIBLE);
             }else{
                 holder.cabecera.setVisibility(View.GONE);

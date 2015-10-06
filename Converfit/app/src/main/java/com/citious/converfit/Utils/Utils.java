@@ -47,6 +47,7 @@ public class Utils {
     static public final String LNAMELOGIN_STRING = "lname";
     static public final String GROUPSUBBRAND_STRING = "group_subbrands";
     static public final String BRAND_NOTIFICATIONS_LAST_UPDATE = "brands_notifications_last_update";
+    static public final String WEBCHAT_STATUS = "web_chat_status";
     static public String pushConversationKey = "";
     static public String errorCheckSession = "";
     static public boolean bloquearSistema = false;
@@ -399,6 +400,20 @@ public class Utils {
         return settings.getString(LNAMELOGIN_STRING, "");
     }
 
+    //Funcion para guardar el id del usuario logado
+    static public void guardarWebChatStatus(Context miContext, String status){
+        SharedPreferences prefCompartidas=miContext.getSharedPreferences(NOMBREPREF_STRING, Context.MODE_PRIVATE);
+        SharedPreferences.Editor miEditor= prefCompartidas.edit();
+        miEditor.putString(WEBCHAT_STATUS, status);
+        miEditor.apply();
+    }
+
+    //Metodo para obtener el id del usuario logado
+    static public String obtenerWebChatStatus(Context miContext){
+        SharedPreferences settings = miContext.getSharedPreferences(NOMBREPREF_STRING, Context.MODE_PRIVATE);
+        return settings.getString(WEBCHAT_STATUS, "0");
+    }
+
     //Metodo para borrar los datos del usuario logado
     static public void borrarUserLogin(Context miContext){
         SharedPreferences prefCompartidas=miContext.getSharedPreferences(NOMBREPREF_STRING, Context.MODE_PRIVATE);
@@ -545,8 +560,10 @@ public class Utils {
                     url = rutaServidorPruebas.concat("android/1.0.0/models/conversations/model.php");
                 }else if(modelo.equalsIgnoreCase("brand_notifications")){
                     url = rutaServidorPruebas.concat("android/1.0.0/models/brand_notifications/model.php");
-                }else if(modelo.equalsIgnoreCase("brands")){
+                }else if(modelo.equalsIgnoreCase("brands")) {
                     url = rutaServidorPruebas.concat("android/1.0.0/models/users/model.php");
+                }else if(modelo.equalsIgnoreCase("webchat")){
+                    url = rutaServidorPruebas.concat("android/1.0.0/models/brands/model.php");
                 }else if(modelo.equalsIgnoreCase("pdf")){
                     url = rutaServidorPruebas.concat("resources/message_files/");
                 }
@@ -557,8 +574,10 @@ public class Utils {
                     url = rutaServidorProduccion.concat("android/1.0.0/models/access/model.php");
                 }else if(modelo.equalsIgnoreCase("conversations")){
                     url = rutaServidorProduccion.concat("android/1.0.0/models/conversations/model.php");
-                }else if(modelo.equalsIgnoreCase("brands")){
+                }else if(modelo.equalsIgnoreCase("brands")) {
                     url = rutaServidorProduccion.concat("android/1.0.0/models/users/model.php");
+                }else if(modelo.equalsIgnoreCase("webchat")){
+                    url = rutaServidorProduccion.concat("android/1.0.0/models/brands/model.php");
                 }else if(modelo.equalsIgnoreCase("pdf")) {
                     url = rutaServidorProduccion.concat("resources/message_files/");
                 }
@@ -566,20 +585,6 @@ public class Utils {
         }
 
         return url;
-    }
-
-    public static AlertDialog mostrarAlert(Context miContext, String tituloAlerta, String mensajeError){
-        AlertDialog.Builder miConstructor = new AlertDialog.Builder(miContext);
-        miConstructor.setMessage(mensajeError); // Definir el mensaje del diálogo
-        miConstructor.setTitle(tituloAlerta);
-        // Definimos el botón y sus acciones
-        miConstructor.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();// se cancela la ventana
-            }
-        });
-        // Crear una instancia del diálogo de tipo alerta a través del constructor
-        return miConstructor.create();
     }
 
     public static Bitmap getRoundedBitmap(Bitmap bitmap) {

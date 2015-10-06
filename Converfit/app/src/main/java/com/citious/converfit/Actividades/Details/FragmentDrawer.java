@@ -59,6 +59,7 @@ public class FragmentDrawer extends Fragment {
     boolean desloguear = false;
     boolean needUpdate = false;
     boolean mostrarGooglePlay = false;
+    TextView txtEstadoChat;
 
     public FragmentDrawer() {
 
@@ -89,6 +90,8 @@ public class FragmentDrawer extends Fragment {
         miContext = getActivity();
         accesoDatos = new UserSqlite(miContext);
         usersList = accesoDatos.devolverUsers();
+        RecuperarEstadoChat estadoThread = new RecuperarEstadoChat();
+        estadoThread.execute();
         if(usersList.isEmpty()){
             RecuperarUsuarios recuperarUsersThread = new RecuperarUsuarios();
             recuperarUsersThread.execute();
@@ -100,6 +103,7 @@ public class FragmentDrawer extends Fragment {
                              Bundle savedInstanceState) {
         // Inflating view layout
         final View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        txtEstadoChat = (TextView) layout.findViewById(R.id.status_chat_drawer);
 
         miBotonAjustes = (ImageView) layout.findViewById(R.id.ajustes_button_drawer);
         miBotonAjustes.setOnClickListener(new View.OnClickListener() {
@@ -333,6 +337,76 @@ public class FragmentDrawer extends Fragment {
                             accesoDatos.insertarUser(user);
                         }
                     }
+                }else{
+                    String codigoError = datos.getString("error_code");
+                    desloguear = Utils.comprobarDesloguear(codigoError);
+                    String[] error = new Utils().devolverStringError(miContext, codigoError);
+                    tituloAlert = error[0];
+                    mensajeError = error[1];
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public class RecuperarEstadoChat extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            getestadoChat();
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        //Se ejecuta cuando se cancela el hilo
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+        //Se ejecuta cuando se realiza la llamada publishProgress()
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+
+        }
+
+        //Se ecuta al finalizar el thread
+        @Override
+        protected void onPostExecute(Void result) {
+            String estadoChat = Utils.obtenerWebChatStatus(miContext);
+            if(estadoChat.equalsIgnoreCase("0")){
+                txtEstadoChat.setText(miContext.getResources().getString(R.string.chat_desactivado_drawer));
+            }else{
+                txtEstadoChat.setText(miContext.getResources().getString(R.string.chat_activado_drawer));
+            }
+        }
+    }
+
+    public void getestadoChat(){
+        String sessionKey = Utils.obtenerSessionKey(miContext);
+        String url = Utils.devolverURLservidor("webchat");
+
+        List<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("action", "brand_webchat_status"));
+        pairs.add(new BasicNameValuePair("session_key", sessionKey));
+
+        Post post = new Post();
+        try {
+            JSONObject datos = post.getServerData(url, pairs);
+            if (datos != null && datos.length() > 0) {
+                // Para cada registro obtenido se extraen sus campos
+                String resultado = datos.getString("result");
+                if(resultado.equalsIgnoreCase("true")){
+                    Utils.dbErrorContador = 0;
+                    JSONObject data = datos.getJSONObject("data");
+                    String brandWebChatStatus = data.getString("brand_webchat_status");
+                    Utils.guardarWebChatStatus(miContext, brandWebChatStatus);
                 }else{
                     String codigoError = datos.getString("error_code");
                     desloguear = Utils.comprobarDesloguear(codigoError);
