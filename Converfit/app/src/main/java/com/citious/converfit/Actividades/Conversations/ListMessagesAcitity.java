@@ -567,7 +567,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
         String url = Utils.devolverURLservidor("conversations");
 
         List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "add_conversation"));
+        pairs.add(new BasicNameValuePair("action", "open_conversation"));
         pairs.add(new BasicNameValuePair("session_key", sessionKey));
         pairs.add(new BasicNameValuePair("user_key", userKey));
         pairs.add(new BasicNameValuePair("app_version", Utils.appVersion));
