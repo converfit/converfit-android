@@ -247,8 +247,8 @@ public class WelcomeActivity extends Activity {
                     //Borramos lo que tuvieramos guardado en Sqlite
                     Utils.borrarSqlite(miContext);
                     Utils.borrarUserLogin(miContext);
-                    String type = data.getString("brand");
-                    Utils.guardarGroupSubBrands(miContext, type);
+                    //String type = data.getString("brand");
+                    //Utils.guardarGroupSubBrands(miContext, type);
                     JSONObject admin = data.getJSONObject("admin");
                     String idAdmin = admin.getString("id_admin");
                     Utils.guardarIdLogin(miContext, idAdmin);

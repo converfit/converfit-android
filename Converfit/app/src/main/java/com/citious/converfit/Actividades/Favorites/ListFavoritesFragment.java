@@ -304,7 +304,7 @@ public class ListFavoritesFragment extends Fragment {
             Utils.numeroFavorites = miUserList.size();
         }
     }
-
+/*
     private void lanzarConversacion(int position){
         String userKey = miUserList.get(position).getUserKey();
         ConversationsSqlite accesoDatosConversations = new ConversationsSqlite(miContext);
@@ -321,4 +321,5 @@ public class ListFavoritesFragment extends Fragment {
         miListMessagesIntent.putExtra("userkey", userKey);
         startActivity(miListMessagesIntent);
     }
+    */
 }
