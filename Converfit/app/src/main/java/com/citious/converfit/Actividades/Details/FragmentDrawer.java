@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -61,7 +62,7 @@ public class FragmentDrawer extends Fragment {
     boolean mostrarGooglePlay = false;
     TextView txtEstadoChat;
     String accionActivarDesactivar = "";
-
+    Handler customHandler;
     public FragmentDrawer() {
 
     }
@@ -85,6 +86,16 @@ public class FragmentDrawer extends Fragment {
         return data;
     }
 
+    private Runnable updateTimerThread = new Runnable()
+    {
+        public void run()
+        {
+            RecuperarUsuarios recuperarUsersThread = new RecuperarUsuarios();
+            recuperarUsersThread.execute();
+            customHandler.postDelayed(this, 1000);
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,10 +104,12 @@ public class FragmentDrawer extends Fragment {
         usersList = accesoDatos.devolverUsers();
         RecuperarEstadoChat estadoThread = new RecuperarEstadoChat();
         estadoThread.execute();
-        if(usersList.isEmpty()){
+        //if(usersList.isEmpty()){
             RecuperarUsuarios recuperarUsersThread = new RecuperarUsuarios();
             recuperarUsersThread.execute();
-        }
+            customHandler = new android.os.Handler();
+            customHandler.postDelayed(updateTimerThread, 0);
+        //}
     }
 
     @Override

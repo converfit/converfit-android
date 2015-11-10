@@ -50,8 +50,7 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.MyView
                 myViewHolder.cabecera.setText(miContext.getResources().getString(R.string.citious_app));
             }
         }else {
-            boolean cambiarTituloCabecera = !current.getConectionStatus().equalsIgnoreCase(data.get(position - 1).getConectionStatus());
-            if(cambiarTituloCabecera){
+            if(current.getConectionStatus().equalsIgnoreCase("mobile") &&  !data.get(position - 1).getConectionStatus().equalsIgnoreCase("mobile")){
                 myViewHolder.cabecera.setText(miContext.getResources().getString(R.string.citious_app));
                 myViewHolder.cabecera.setVisibility(View.VISIBLE);
             }else{

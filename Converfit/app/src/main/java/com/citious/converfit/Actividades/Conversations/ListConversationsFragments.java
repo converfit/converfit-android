@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
@@ -63,6 +64,7 @@ public class ListConversationsFragments extends Fragment {
     boolean needUpdate = false;
     boolean desloguear = false;
     boolean mostrarGooglePlay = false;
+    Handler customHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -113,6 +115,15 @@ public class ListConversationsFragments extends Fragment {
         getActivity().unregisterReceiver(mHandleMessageReceiver);
     }
 
+    private Runnable updateTimerThread = new Runnable()
+    {
+        public void run()
+        {
+            thread = new RecuperarConversaciones();
+            thread.execute();
+            customHandler.postDelayed(this, 1000);
+        }
+    };
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -123,13 +134,16 @@ public class ListConversationsFragments extends Fragment {
             ListConversationsAdapter miAdapter = new ListConversationsAdapter(miContext, miConverstaionsList);
             miListView.setAdapter(miAdapter);
             if(Conexion.isInternetAvailable(miContext)) {
-                thread = new RecuperarConversaciones();
-                thread.execute();
+                customHandler = new android.os.Handler();
+                customHandler.postDelayed(updateTimerThread, 0);
             }
 
         } else {
             offSet = 0;
             mensajeError = "";
+            if(customHandler != null){
+                customHandler.removeCallbacks(updateTimerThread);
+            }
         }
     }
 

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class ChatWebFragment extends Fragment {
     RecuperarPosts thread;
     private RecyclerView recyclerView;
     boolean mostrarGooglePlay = false;
+    Handler customHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,6 +83,16 @@ public class ChatWebFragment extends Fragment {
         }
     }
 
+    private Runnable updateTimerThread = new Runnable()
+    {
+        public void run()
+        {
+            thread = new RecuperarPosts();
+            thread.execute();
+            customHandler.postDelayed(this, 1000);
+        }
+    };
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -90,10 +102,13 @@ public class ChatWebFragment extends Fragment {
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             if(Conexion.isInternetAvailable(miContext)) {
-                thread = new RecuperarPosts();
-                thread.execute();
+                customHandler = new android.os.Handler();
+                customHandler.postDelayed(updateTimerThread, 0);
             }
         }else{
+            if(customHandler != null){
+                customHandler.removeCallbacks(updateTimerThread);
+            }
         }
     }
 

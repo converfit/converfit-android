@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -20,12 +21,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import com.citious.converfit.AccesoDatos.Conexion;
 import com.citious.converfit.AccesoDatos.Post;
-import com.citious.converfit.AccesoDatos.Sqlite.ConversationsSqlite;
 import com.citious.converfit.AccesoDatos.Sqlite.UserSqlite;
-import com.citious.converfit.Actividades.Conversations.ListMessagesAcitity;
 import com.citious.converfit.Actividades.Details.MyCustomDialog;
 import com.citious.converfit.Adapters.ListUserAdapter;
 import com.citious.converfit.Models.UserModel;
@@ -57,6 +55,7 @@ public class ListFavoritesFragment extends Fragment {
     boolean needUpdate = false;
     boolean desloguear = false;
     boolean mostrarGooglePlay = false;
+    Handler customHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -89,6 +88,21 @@ public class ListFavoritesFragment extends Fragment {
         }
     }
 
+    private Runnable updateTimerThread = new Runnable()
+    {
+        public void run()
+        {
+            //write here whaterver you want to repeat
+            //thread = new RecuperarBrandsFavoritas();
+            //thread.execute();
+            miUserList = accesoDatos.devolverUsers();
+            hayFavoritos();
+            ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
+            recyclerView.setAdapter(miAdapter);
+            customHandler.postDelayed(this, 1000);
+        }
+    };
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -98,13 +112,16 @@ public class ListFavoritesFragment extends Fragment {
             ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
             recyclerView.setAdapter(miAdapter);
             if(Conexion.isInternetAvailable(miContext)) {
-                thread = new RecuperarBrandsFavoritas();
-                thread.execute();
+                customHandler = new android.os.Handler();
+                customHandler.postDelayed(updateTimerThread, 0);
             }
         }else{
             offSet = 0;
             buscandoMas = false;
             mensajeError = "";
+            if(customHandler != null) {
+                customHandler.removeCallbacks(updateTimerThread);
+            }
         }
     }
 
@@ -197,7 +214,7 @@ public class ListFavoritesFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             String favLastUp = Utils.obtenerFavoritoLastUpdate(miContext);
-            if(favLastUp.equalsIgnoreCase("0") && Utils.favoritesPrimeraVez) {
+            /*if(favLastUp.equalsIgnoreCase("0") && Utils.favoritesPrimeraVez) {
                 Utils.favoritesPrimeraVez = false;
                 DialogInterface.OnCancelListener dialogCancel = new DialogInterface.OnCancelListener() {
                     public void onCancel(DialogInterface dialog) {
@@ -206,7 +223,7 @@ public class ListFavoritesFragment extends Fragment {
                 };
                 pd = ProgressDialog.show(miContext, getResources().getString(R.string.buscarServidor), getResources().getString(R.string.buscando), true, true, dialogCancel);
                 pd.setCanceledOnTouchOutside(false);
-            }
+            }*/
         }
 
         //Se ejecuta cuando se cancela el hilo

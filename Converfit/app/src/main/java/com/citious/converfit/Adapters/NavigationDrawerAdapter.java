@@ -31,13 +31,6 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
         this.data = data;
     }
 
-    /*
-    public void delete(int position) {
-        data.remove(position);
-        notifyItemRemoved(position);
-    }
-    */
-
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.nav_drawer_row, parent, false);
@@ -53,8 +46,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                 holder.cabecera.setText(context.getResources().getString(R.string.citious_app));
             }
         }else {
-            boolean cambiarTituloCabecera = !current.getConectionStatus().equalsIgnoreCase(data.get(position - 1).getConectionStatus());
-            if(cambiarTituloCabecera){
+            if(current.getConectionStatus().equalsIgnoreCase("mobile") &&  !data.get(position - 1).getConectionStatus().equalsIgnoreCase("mobile")){
                 holder.cabecera.setText(context.getResources().getString(R.string.citious_app));
                 holder.cabecera.setVisibility(View.VISIBLE);
             }else{
