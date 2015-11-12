@@ -92,9 +92,6 @@ public class ListFavoritesFragment extends Fragment {
     {
         public void run()
         {
-            //write here whaterver you want to repeat
-            //thread = new RecuperarBrandsFavoritas();
-            //thread.execute();
             miUserList = accesoDatos.devolverUsers();
             hayFavoritos();
             ListUserAdapter miAdapter = new ListUserAdapter(miContext, miUserList);
@@ -126,6 +123,7 @@ public class ListFavoritesFragment extends Fragment {
     }
 
     private void mostrarAlerta(){
+        customHandler.removeCallbacks(updateTimerThread);
         MyCustomDialog miConstructor = new MyCustomDialog(miContext, tituloAlert, mensajeError);
         String tituloBoton = getResources().getString(R.string.aceptar_alert);
         mostrarGooglePlay = false;
@@ -136,7 +134,9 @@ public class ListFavoritesFragment extends Fragment {
         // Definimos el botón y sus acciones
         AlertDialog dialog = miConstructor.setNegativeButton(tituloBoton, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                mensajeError = "";
+                if(!mensajeError.equalsIgnoreCase(getResources().getString(R.string.session_key_not_valid))){
+                    customHandler.postDelayed(updateTimerThread, 0);
+                }mensajeError = "";
                 dialog.cancel();// se cancela la ventana
                 if (desloguear) {
                     desloguear = false;

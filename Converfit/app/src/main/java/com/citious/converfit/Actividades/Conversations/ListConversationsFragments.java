@@ -235,6 +235,7 @@ public class ListConversationsFragments extends Fragment {
         return super.onOptionsItemSelected(item);
     }
     private void mostrarAlerta(){
+        customHandler.removeCallbacks(updateTimerThread);
         MyCustomDialog miConstructor = new MyCustomDialog(miContext, tituloAlert, mensajeError);
         String tituloBoton = getResources().getString(R.string.aceptar_alert);
         mostrarGooglePlay = false;
@@ -245,6 +246,9 @@ public class ListConversationsFragments extends Fragment {
         // Definimos el botón y sus acciones
         AlertDialog dialog = miConstructor.setNegativeButton(tituloBoton, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                if(!mensajeError.equalsIgnoreCase(getResources().getString(R.string.session_key_not_valid))){
+                    customHandler.postDelayed(updateTimerThread, 0);
+                }
                 mensajeError = "";
                 dialog.cancel();// se cancela la ventana
                 if(desloguear){
