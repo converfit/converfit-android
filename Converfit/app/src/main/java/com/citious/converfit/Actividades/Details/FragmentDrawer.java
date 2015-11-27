@@ -469,35 +469,37 @@ public class FragmentDrawer extends Fragment {
 
     private void mostrarAlerta(){
         customHandler.removeCallbacks(updateTimerThread);
-        MyCustomDialog miConstructor = new MyCustomDialog(miContext, tituloAlert, mensajeError);
-        String tituloBoton = getResources().getString(R.string.aceptar_alert);
-        mostrarGooglePlay = false;
-        if(mensajeError.equalsIgnoreCase(getResources().getString(R.string.app_version_error))){
-            mostrarGooglePlay = true;
-            tituloBoton = getResources().getString(R.string.google_play);
-        }
-        // Definimos el botón y sus acciones
-        AlertDialog dialog = miConstructor.setNegativeButton(tituloBoton, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                if(!mensajeError.equalsIgnoreCase(getResources().getString(R.string.session_key_not_valid))){
-                    customHandler.postDelayed(updateTimerThread, 0);
-                }
-                mensajeError = "";
-                dialog.cancel();// se cancela la ventana
-                if(desloguear){
-                    desloguear = false;
-                    Utils.desLoguear(miContext);
-                    getActivity().finish();
-                }else if(mostrarGooglePlay){
-                    final String appPackageName = miContext.getPackageName();
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("market://details?id=" + appPackageName));
-                    startActivity(intent);
-                }
+        if(isVisible() && isAdded()) {
+            MyCustomDialog miConstructor = new MyCustomDialog(miContext, tituloAlert, mensajeError);
+            String tituloBoton = miContext.getResources().getString(R.string.aceptar_alert);
+            mostrarGooglePlay = false;
+            if (mensajeError.equalsIgnoreCase(miContext.getResources().getString(R.string.app_version_error))) {
+                mostrarGooglePlay = true;
+                tituloBoton = miContext.getResources().getString(R.string.google_play);
             }
-        }).show();
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(16);
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.Rojo));
+            // Definimos el botón y sus acciones
+            AlertDialog dialog = miConstructor.setNegativeButton(tituloBoton, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    if (!mensajeError.equalsIgnoreCase(miContext.getResources().getString(R.string.session_key_not_valid))) {
+                        customHandler.postDelayed(updateTimerThread, 0);
+                    }
+                    mensajeError = "";
+                    dialog.cancel();// se cancela la ventana
+                    if (desloguear) {
+                        desloguear = false;
+                        Utils.desLoguear(miContext);
+                        getActivity().finish();
+                    } else if (mostrarGooglePlay) {
+                        final String appPackageName = miContext.getPackageName();
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("market://details?id=" + appPackageName));
+                        startActivity(intent);
+                    }
+                }
+            }).show();
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(16);
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(miContext.getResources().getColor(R.color.Rojo));
+        }
     }
 
     public class ChangeEstadoChat extends AsyncTask<Void, Void, Void> {

@@ -38,6 +38,7 @@ public class GCMIntentService extends IntentService
             {
                 titulo = extras.getString("title");
                 mensaje = extras.getString("message");
+                String aux = extras.getString("conversationKey");
                 Utils.pushConversationKey = extras.getString("conversationKey");
 
             }if(actividadAbierta){
