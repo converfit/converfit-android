@@ -3,4 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.citious.converfit.Actividades.ChatWeb.UserTimeLine">
 
+    <item
+        android:id="@+id/open_conversation"
+        android:title="pruebaTexto"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/compose"/>
 </menu>

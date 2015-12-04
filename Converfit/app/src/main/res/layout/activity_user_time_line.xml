@@ -10,9 +10,11 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/user_time_line_recycled"
+
+    <WebView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/webViewUser"
         android:layout_below="@+id/user_time_line_tool_bar"/>
+
 </RelativeLayout>

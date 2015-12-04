@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.citious.converfit.AccesoDatos.Sqlite.ConversationsSqlite;
+import com.citious.converfit.Actividades.ChatWeb.UserTimeLine;
 import com.citious.converfit.Actividades.Conversations.ListMessagesAcitity;
 import com.citious.converfit.Models.UserModel;
 import com.citious.converfit.R;
@@ -66,7 +67,8 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.MyView
             myViewHolder.iconoUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    lanzarConversacion(position);
+                    //lanzarConversacion(position);
+                    lanzarUserTimeLine(position);
                 }
             });
         }
@@ -77,7 +79,8 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.MyView
         myViewHolder.userName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lanzarConversacion(position);
+                //lanzarConversacion(position);
+                lanzarUserTimeLine(position);
             }
         });
 
@@ -93,7 +96,8 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.MyView
         myViewHolder.iconoStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lanzarConversacion(position);
+                //lanzarConversacion(position);
+                lanzarUserTimeLine(position);
             }
         });
 
@@ -101,14 +105,16 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.MyView
         myViewHolder.hora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lanzarConversacion(position);
+                //lanzarConversacion(position);
+                lanzarUserTimeLine(position);
             }
         });
         myViewHolder.ultimaActividad.setText(current.getLast_page_title());
         myViewHolder.ultimaActividad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lanzarConversacion(position);
+                //lanzarConversacion(position);
+                lanzarUserTimeLine(position);
             }
         });
     }
@@ -152,5 +158,13 @@ public class ListUserAdapter extends RecyclerView.Adapter<ListUserAdapter.MyView
         miListMessagesIntent.putExtra("brandName", brandName);
         miListMessagesIntent.putExtra("userkey", userKey);
         miContext.startActivity(miListMessagesIntent);
+    }
+
+    private void lanzarUserTimeLine(int tapPosicion){
+        Intent miUserTimeLineIntent = new Intent(miContext, UserTimeLine.class);
+        String userKey = data.get(tapPosicion).getUserKey();
+        miUserTimeLineIntent.putExtra("userkey", userKey);
+        miUserTimeLineIntent.putExtra("userName", data.get(tapPosicion).getUserName());
+        miContext.startActivity(miUserTimeLineIntent);
     }
 }

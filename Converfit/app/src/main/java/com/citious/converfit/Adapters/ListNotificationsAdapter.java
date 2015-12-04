@@ -124,6 +124,7 @@ public class ListNotificationsAdapter extends RecyclerView.Adapter<ListNotificat
         Intent miUserTimeLineIntent = new Intent(miContext, UserTimeLine.class);
         String userKey = postList.get(tapPosicion).getUserKey();
         miUserTimeLineIntent.putExtra("userkey", userKey);
+        miUserTimeLineIntent.putExtra("userName", postList.get(tapPosicion).getUserNAme());
         miContext.startActivity(miUserTimeLineIntent);
     }
 }
