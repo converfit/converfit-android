@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,14 +18,13 @@ import com.citious.converfit.AccesoDatos.Sqlite.ConversationsSqlite;
 import com.citious.converfit.Actividades.Details.FragmentDrawer;
 import com.citious.converfit.R;
 import com.citious.converfit.Utils.Utils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.List;
-import static com.citious.converfit.Utils.UtilidadesGCM.*;
+import java.util.HashMap;
+import java.util.Map;
+import static com.citious.converfit.Utils.UtilidadesGCM.DISPLAY_MESSAGE_ACTION;
+import static com.citious.converfit.Utils.UtilidadesGCM.actividadAbierta;
 
-public class TabContenedoraActivity extends ActionBarActivity implements FragmentDrawer.FragmentDrawerListener {
+public class TabContenedoraActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
     // Declaring Your View and Variables
     Context miContext;
@@ -193,14 +192,12 @@ public class TabContenedoraActivity extends ActionBarActivity implements Fragmen
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = Utils.devolverURLservidor("conversations");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "get_new_message_flags_count"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "get_new_message_flags_count");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");

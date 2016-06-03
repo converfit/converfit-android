@@ -7,8 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,13 +18,11 @@ import com.citious.converfit.AccesoDatos.Post;
 import com.citious.converfit.Actividades.Details.MyCustomDialog;
 import com.citious.converfit.R;
 import com.citious.converfit.Utils.Utils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class RecoverPassordAcitivy extends ActionBarActivity {
+public class RecoverPassordAcitivy extends AppCompatActivity {
 
     Context miContext;
     String tituloAlert = "";
@@ -159,14 +157,12 @@ public class RecoverPassordAcitivy extends ActionBarActivity {
         String url = Utils.devolverURLservidor("access");
         String sessionKey = Utils.obtenerSessionKey(miContext);
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "recover_password"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "recover_password");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");

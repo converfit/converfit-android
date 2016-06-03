@@ -7,8 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,13 +23,11 @@ import com.citious.converfit.AccesoDatos.Post;
 import com.citious.converfit.Actividades.Details.MyCustomDialog;
 import com.citious.converfit.R;
 import com.citious.converfit.Utils.Utils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class PersonalDataActivity extends ActionBarActivity {
+public class PersonalDataActivity extends AppCompatActivity {
 
     Context miContext;
     EditText miEdtNombre, miEdtApellidos;
@@ -238,7 +236,7 @@ public class PersonalDataActivity extends ActionBarActivity {
         String url = Utils.devolverURLservidor("access");
         String sessionKey = Utils.obtenerSessionKey(miContext);
 
-        List<NameValuePair> pairs = new ArrayList<>();
+        /*List<NameValuePair> pairs = new ArrayList<>();
         pairs.add(new BasicNameValuePair("action", "update_personal_data"));
         pairs.add(new BasicNameValuePair("session_key", sessionKey));
         pairs.add(new BasicNameValuePair("fname", nombre));
@@ -247,7 +245,15 @@ public class PersonalDataActivity extends ActionBarActivity {
 
         Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            JSONObject datos = post.getServerData(url, pairs);*/
+        try {
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "update_personal_data");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("fname", nombre);
+            stringMap.put("lname", apellidos);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");

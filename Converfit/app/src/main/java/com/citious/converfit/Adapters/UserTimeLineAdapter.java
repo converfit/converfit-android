@@ -62,7 +62,7 @@ public class UserTimeLineAdapter extends RecyclerView.Adapter<UserTimeLineAdapte
                 cadena = "minuto";
             }
             horaTemp = horaTemp.replace("min", cadena);
-        }else if(horaTemp.contains("h")){
+        }else if(horaTemp.contains("h") && !horaTemp.equalsIgnoreCase("Ahora")){
             String cadena = "horas";
             if(horaTemp.equalsIgnoreCase("1 h")){
                 cadena = "hora";

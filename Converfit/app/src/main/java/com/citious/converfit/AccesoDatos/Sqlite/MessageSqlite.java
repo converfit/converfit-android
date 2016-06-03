@@ -68,7 +68,7 @@ public class MessageSqlite {
     }
 
     //Devolvemos todas los mensajes
-    public ArrayList<MensajeModel> devolverMessages(String conversationKey){
+    public ArrayList<MensajeModel> devolverMessages(String conversationKey, Context miContext){
         ArrayList<MensajeModel> miMessageList = new ArrayList<>();
         try {
             // Abrir la base de datos para lectura
@@ -89,7 +89,7 @@ public class MessageSqlite {
                     boolean enviado = (elCursor.getString(6)).equals("1");
                     String fname = elCursor.getString(7);
                     String lname = elCursor.getString(8);
-                    MensajeModel message = new MensajeModel(messageKey, content, created, sender, type, converKey,enviado,fname, lname);
+                    MensajeModel message = new MensajeModel(messageKey, content, created, sender, type, converKey,enviado,fname, lname, miContext);
                     miMessageList.add(message);
                 } while (elCursor.moveToNext());
             }
@@ -128,8 +128,8 @@ public class MessageSqlite {
     }
 
     //Añadimos un mensaje
-    public void addMensaje(String messageKey ,String content, String created, String sender, String type, String  converKey, boolean enviado, String fname, String lname){
-        MensajeModel message = new MensajeModel(messageKey, content, created, sender, type, converKey, enviado, fname, lname);
+    public void addMensaje(String messageKey ,String content, String created, String sender, String type, String  converKey, boolean enviado, String fname, String lname, Context miContext){
+        MensajeModel message = new MensajeModel(messageKey, content, created, sender, type, converKey, enviado, fname, lname, miContext);
         insertarMessage(message);
     }
 
@@ -203,7 +203,7 @@ public class MessageSqlite {
                     boolean enviado = (elCursor.getString(6)).equals("1");
                     String fname = elCursor.getString(7);
                     String lname = elCursor.getString(8);
-                    MensajeModel message = new MensajeModel(messageKey, content, created, sender, type, converKey,enviado, fname, lname);
+                    MensajeModel message = new MensajeModel(messageKey, content, created, sender, type, converKey,enviado, fname, lname, miContext);
                     miMessageListFallidos.add(message);
                 } while (elCursor.moveToNext());
             }
@@ -276,7 +276,7 @@ public class MessageSqlite {
     }
 
     public String horaUltimoMensajeEnviado(Context miContext, String conversationKey){
-        ArrayList<MensajeModel> listaMensajes = devolverMessages(conversationKey);
+        ArrayList<MensajeModel> listaMensajes = devolverMessages(conversationKey, miContext);
         Collections.reverse(listaMensajes);
         String hora = "";
         if(listaMensajes.size() > 0){
@@ -321,5 +321,30 @@ public class MessageSqlite {
         dbHelper.close();
         // Devolver el resultado de la operación
         return numReg;
+    }
+
+
+    //Cambiamos el valor de si es enviado un mensaje  o no al valor que nos llega
+    public long updateContenido(String conversationKey, String messageKey, String contenido){
+        long numReg;
+        // Abrir la base de datos para escritura
+        database = dbHelper.getWritableDatabase();
+        // Crear el objeto ContentValues con los nombres de los campos del
+        // registro a insertar
+        ContentValues initialValues = updateContenidoContentValues(contenido);
+        // Insertar el registro directamente en la tabla
+        numReg = database.update(MESSAGE_TABLE_NAME, initialValues, CONVERSATIONKEY_MESSAGE + "=?" + " AND " + MESSAGEKEY_MESSAGE + "=?",
+                new String[]{String.valueOf(conversationKey), String.valueOf(messageKey)});
+        // Cerrar la base de datos
+        dbHelper.close();
+        // Devolver el número de registro insertado o -1 si hubo algún error
+        return numReg;
+    }
+
+    // Crear el objeto ContentValues con los datos a insertar en la tabla de Politicas
+    private ContentValues updateContenidoContentValues(String contenido) {
+        ContentValues values = new ContentValues();
+        values.put(CONTENT_MESSAGE, contenido);
+        return values;
     }
 }

@@ -20,6 +20,7 @@ import com.citious.converfit.Actividades.Conversations.MostrarImagenActivity;
 import com.citious.converfit.Actividades.Details.VisorPDFActivity;
 import com.citious.converfit.Models.MensajeModel;
 import com.citious.converfit.R;
+import com.citious.converfit.Utils.AddFilesToDisk;
 import com.citious.converfit.Utils.Utils;
 import java.util.ArrayList;
 import static com.citious.converfit.Utils.Utils.avatarString;
@@ -105,7 +106,7 @@ public class ListMessagesAdapter extends BaseAdapter {
                 convertView = inflater.inflate(R.layout.imagen_usuario,null);
             }
             ImageView miImage = (ImageView) convertView.findViewById(R.id.img_imagen_usuario);
-            byte[] decodedString = Base64.decode(item.getContent(), Base64.DEFAULT);
+            /*byte[] decodedString = Base64.decode(item.getContent(), Base64.DEFAULT);
             Bitmap foto = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             miImage.setImageBitmap(foto);
             miImage.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +114,17 @@ public class ListMessagesAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     Intent miDetalleImagenInten = new Intent(miContext, MostrarImagenActivity.class);
                     avatarString = item.getContent();
+                    miContext.startActivity(miDetalleImagenInten);
+                }
+            });*/
+            final String pathMiImagen = item.getContent();
+            Bitmap foto =  AddFilesToDisk.decodeSampledBitmapFromFile(pathMiImagen, 160, 160);
+            miImage.setImageBitmap(foto);
+            miImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent miDetalleImagenInten = new Intent(miContext, MostrarImagenActivity.class);
+                    miDetalleImagenInten.putExtra("url_imagen", item.getContent());
                     miContext.startActivity(miDetalleImagenInten);
                 }
             });
@@ -162,7 +174,7 @@ public class ListMessagesAdapter extends BaseAdapter {
                 convertView = inflater.inflate(R.layout.imagen_otro_usuario,null);
             }
             ImageView miImage = (ImageView) convertView.findViewById(R.id.img_imagen_otro_usuario);
-            byte[] decodedString = Base64.decode(messageList.get(position).getContent(), Base64.DEFAULT);
+            /*byte[] decodedString = Base64.decode(messageList.get(position).getContent(), Base64.DEFAULT);
             Bitmap foto = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             miImage.setImageBitmap(foto);
             miImage.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +182,17 @@ public class ListMessagesAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     Intent miDetalleImagenInten = new Intent(miContext, MostrarImagenActivity.class);
                     avatarString = item.getContent();
+                    miContext.startActivity(miDetalleImagenInten);
+                }
+            });*/
+            final String pathMiImagen = item.getContent();
+            Bitmap foto =  AddFilesToDisk.decodeSampledBitmapFromFile(pathMiImagen, 160, 160);
+            miImage.setImageBitmap(foto);
+            miImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent miDetalleImagenInten = new Intent(miContext, MostrarImagenActivity.class);
+                    miDetalleImagenInten.putExtra("url_imagen", item.getContent());
                     miContext.startActivity(miDetalleImagenInten);
                 }
             });

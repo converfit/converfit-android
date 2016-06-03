@@ -11,10 +11,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.KeyEvent;
@@ -38,9 +38,8 @@ import com.citious.converfit.Adapters.ListMessagesAdapter;
 import com.citious.converfit.Contenedores.TabContenedoraActivity;
 import com.citious.converfit.Models.MensajeModel;
 import com.citious.converfit.R;
+import com.citious.converfit.Utils.AddFilesToDisk;
 import com.citious.converfit.Utils.Utils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedInputStream;
@@ -50,10 +49,13 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import static com.citious.converfit.Utils.UtilidadesGCM.*;
+import java.util.HashMap;
+import java.util.Map;
+import static com.citious.converfit.Utils.UtilidadesGCM.DISPLAY_MESSAGE_ACTION;
+import static com.citious.converfit.Utils.UtilidadesGCM.actividadAbierta;
 
-public class ListMessagesAcitity extends ActionBarActivity {
+
+public class ListMessagesAcitity extends AppCompatActivity {
 
     Context miContext;
     ListView miListView;
@@ -185,7 +187,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
 
 
         accesoDatos = new MessageSqlite(miContext);
-        miMensajesLista = accesoDatos.devolverMessages(conversationKey);
+        miMensajesLista = accesoDatos.devolverMessages(conversationKey, miContext);
         tempMessageKey = accesoDatos.devolverMessagesTotales();
         mostrarBotonMasMensajes(false);
 
@@ -211,7 +213,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
         actividadAbierta = true;
         ocultarTEclado();
         accesoDatos = new MessageSqlite(miContext);
-        miMensajesLista = accesoDatos.devolverMessages(conversationKey);
+        miMensajesLista = accesoDatos.devolverMessages(conversationKey, miContext);
         indicePaginado = 0;
         mostrarBotonMasMensajes(false);
         miAdapter = new ListMessagesAdapter(miContext, miMensajesListaPaginada, miListView, header, miEditText, userKey);
@@ -436,7 +438,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
                     accesoDatosConversations.updateConversationFlag(conversationKey);
                 }
                 if(needUpdate) {
-                    miMensajesLista = accesoDatos.devolverMessages(conversationKey);
+                    miMensajesLista = accesoDatos.devolverMessages(conversationKey, miContext);
                     indicePaginado = 0;
                     mostrarBotonMasMensajes(false);
                     miAdapter = new ListMessagesAdapter(miContext, miMensajesListaPaginada, miListView, header, miEditText, userKey);
@@ -457,19 +459,17 @@ public class ListMessagesAcitity extends ActionBarActivity {
         ConversationsSqlite accesoDatosConversation = new ConversationsSqlite(miContext);
         String lastUpdate = accesoDatosConversation.devolverLastUpdateConversacion(conversationKey);
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "list_messages"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("conversation_key", conversationKey));
-        pairs.add(new BasicNameValuePair("last_update", lastUpdate));
-        pairs.add(new BasicNameValuePair("offset", String.valueOf(offSet)));
-        pairs.add(new BasicNameValuePair("limit", String.valueOf(limit)));
-        pairs.add(new BasicNameValuePair("app_version", Utils.appVersion));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "list_messages");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("conversation_key", conversationKey);
+            stringMap.put("last_update", lastUpdate);
+            stringMap.put("offset", String.valueOf(offSet));
+            stringMap.put("limit", String.valueOf(limit));
+            stringMap.put("app_version", Utils.appVersion);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");
@@ -483,7 +483,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
                         accesoDatosConversation.modificarLastUpdateConversacion(conversationKey,lastUp);
                         JSONArray listMessage = data.getJSONArray("messages");
                         for (int indice = 0; indice < listMessage.length(); indice++) {
-                            MensajeModel mensaje = new MensajeModel(listMessage.getJSONObject(indice), conversationKey);
+                            MensajeModel mensaje = new MensajeModel(listMessage.getJSONObject(indice), conversationKey, miContext);
                             accesoDatos.insertarMessage(mensaje);
                         }
                     }
@@ -525,7 +525,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
                     tempMessageKey += 1;
                     aContent = contenido;
                     aType = tipo;
-                    accesoDatos.addMensaje(String.valueOf(tempMessageKey), contenido, fecha, "brand", tipo, conversationKey, true, Utils.obtenerFnameLogin(miContext), Utils.obtenerLnameLogin(miContext));
+                    accesoDatos.addMensaje(String.valueOf(tempMessageKey), contenido, fecha, "brand", tipo, conversationKey, true, Utils.obtenerFnameLogin(miContext), Utils.obtenerLnameLogin(miContext), miContext);
                 }else{
                     aContent = params[0];
                     aType= params[1];
@@ -544,7 +544,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
                 mostrarAlerta();
                 miEditText.setText("");
                 indicePaginado = 0;
-                miMensajesLista = accesoDatos.devolverMessages(conversationKey);
+                miMensajesLista = accesoDatos.devolverMessages(conversationKey, miContext);
                 mostrarBotonMasMensajes(false);
                 esPrimeraVez = true;
             }else {
@@ -566,16 +566,14 @@ public class ListMessagesAcitity extends ActionBarActivity {
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = Utils.devolverURLservidor("conversations");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "open_conversation"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("user_key", userKey));
-        pairs.add(new BasicNameValuePair("app_version", Utils.appVersion));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "open_conversation");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("user_key", userKey);
+            stringMap.put("app_version", Utils.appVersion);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");
@@ -606,17 +604,15 @@ public class ListMessagesAcitity extends ActionBarActivity {
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = Utils.devolverURLservidor("conversations");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "add_message"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("conversation_key", conversationKey));
-        pairs.add(new BasicNameValuePair("type", "premessage"));
-        pairs.add(new BasicNameValuePair("app_version", Utils.appVersion));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "add_message");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("conversation_key", conversationKey);
+            stringMap.put("type", "premessage");
+            stringMap.put("app_version", Utils.appVersion);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");
@@ -626,6 +622,10 @@ public class ListMessagesAcitity extends ActionBarActivity {
                     JSONObject dataResultado = datos.getJSONObject("data");
                     messageKeyServidor = dataResultado.getString("message_key");
                     accesoDatos.updateMessageKey(conversationKey, String.valueOf(tempMessageKey), messageKeyServidor);
+                    if(tipo.equalsIgnoreCase("jpeg_base64") || tipo.equalsIgnoreCase("mp4_base64")) {
+                        String path = AddFilesToDisk.renombrarTempMessageKeyFile(String.valueOf(tempMessageKey), messageKeyServidor, tipo, miContext);
+                        accesoDatos.updateContenido(conversationKey, messageKeyServidor, path);
+                    }
                 }else{
                     String codigoError = datos.getString("error_code");
                     desloguear = Utils.comprobarDesloguear(codigoError);
@@ -663,7 +663,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
                 mostrarAlerta();
             }
             indicePaginado = 0;
-            miMensajesLista = accesoDatos.devolverMessages(conversationKey);
+            miMensajesLista = accesoDatos.devolverMessages(conversationKey, miContext);
             mostrarBotonMasMensajes(false);
             if (miAdapter == null) {
                 miAdapter = new ListMessagesAdapter(miContext, miMensajesListaPaginada, miListView, header, miEditText, userKey);
@@ -678,18 +678,16 @@ public class ListMessagesAcitity extends ActionBarActivity {
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = Utils.devolverURLservidor("conversations");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "update_message"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("conversation_key", conversationKey));
-        pairs.add(new BasicNameValuePair("message_key", messageKey));
-        pairs.add(new BasicNameValuePair("content", content));
-        pairs.add(new BasicNameValuePair("type", type));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "update_message");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("conversation_key", conversationKey);
+            stringMap.put("message_key", messageKey);
+            stringMap.put("content", content);
+            stringMap.put("type", type);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");
@@ -809,7 +807,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
                 }
             }
             accesoDatos.updateMessageCreation(converKey,mensajeFallido.getMessageKey(),fecha);
-            miMensajesLista = accesoDatos.devolverMessages(converKey);
+            miMensajesLista = accesoDatos.devolverMessages(converKey, miContexto);
             mostrarBotonMasMensajes(false);
             boolean updateMensaje = false;
             int posicion = 0;
@@ -835,7 +833,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
                 tempMessageKey = Integer.parseInt(mensajeFallido.getMessageKey());
                 CrearMensaje crearMensajeThread = new CrearMensaje();
                 crearMensajeThread.execute(mensajeFallido.getContent(), mensajeFallido.getType());
-                accesoDatos.addMensaje(mensajeFallido.getMessageKey(),contenido, fecha, "user", tipo, conversationKey, true, Utils.obtenerFnameLogin(miContext), Utils.obtenerLnameLogin(miContext));
+                accesoDatos.addMensaje(mensajeFallido.getMessageKey(),contenido, fecha, "user", tipo, conversationKey, true, Utils.obtenerFnameLogin(miContext), Utils.obtenerLnameLogin(miContext), miContexto);
             }
         }
     }
@@ -848,7 +846,7 @@ public class ListMessagesAcitity extends ActionBarActivity {
            accesoDatos.borrarMensajesFallidos(mensajeFallido.getConversationKey(), mensajeFallido.getMessageKey());
         }
 
-        miMensajesLista = accesoDatos.devolverMessages(converKey);
+        miMensajesLista = accesoDatos.devolverMessages(converKey, miContexto);
         mostrarBotonMasMensajes(false);
     }
 
@@ -871,16 +869,14 @@ public class ListMessagesAcitity extends ActionBarActivity {
             String url = Utils.devolverURLservidor("conversations");
             String sessionKey = Utils.obtenerSessionKey(miContext);
 
-            List<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("action", "assign_conversation"));
-            pairs.add(new BasicNameValuePair("session_key", sessionKey));
-            pairs.add(new BasicNameValuePair("conversation_key", conversationKey));
-            pairs.add(new BasicNameValuePair("assign", String.valueOf(asignado)));
-            pairs.add(new BasicNameValuePair("app", Utils.app));
-
-            Post post = new Post();
             try {
-                JSONObject datos = post.getServerData(url, pairs);
+                Map<String, Object> stringMap = new HashMap<>();
+                stringMap.put("action", "assign_conversation");
+                stringMap.put("session_key", sessionKey);
+                stringMap.put("conversation_key", conversationKey);
+                stringMap.put("assign", String.valueOf(asignado));
+                stringMap.put("app", Utils.app);
+                JSONObject datos = Post.getServerData(stringMap,"POST",url);
                 if (datos != null && datos.length() > 0) {
                     // Para cada registro obtenido se extraen sus campos
                     String resultado = datos.getString("result");

@@ -7,9 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -27,14 +27,14 @@ import com.citious.converfit.Contenedores.TabContenedoraActivity;
 import com.citious.converfit.Models.UserModel;
 import com.citious.converfit.R;
 import com.citious.converfit.Utils.Utils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
+
+public class ListElegibleFavoritesAcitivy extends AppCompatActivity {
 
     Context miContext;
     private RecyclerView recyclerView;
@@ -229,18 +229,16 @@ public class ListElegibleFavoritesAcitivy extends ActionBarActivity {
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = Utils.devolverURLservidor("brands");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "list_users"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("users_last_update", String.valueOf(Utils.obtenerFavoritoLastUpdate(miContext))));
-        pairs.add(new BasicNameValuePair("offset", String.valueOf(offSet)));
-        pairs.add(new BasicNameValuePair("limit", String.valueOf(limit)));
-        pairs.add(new BasicNameValuePair("app_version", Utils.appVersion));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "list_users");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("users_last_update", String.valueOf(Utils.obtenerFavoritoLastUpdate(miContext)));
+            stringMap.put("offset", String.valueOf(offSet));
+            stringMap.put("limit", String.valueOf(limit));
+            stringMap.put("app_version", Utils.appVersion);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");

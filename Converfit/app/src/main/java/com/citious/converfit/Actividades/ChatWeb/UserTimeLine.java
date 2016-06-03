@@ -1,41 +1,40 @@
 package com.citious.converfit.Actividades.ChatWeb;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
-
 import com.citious.converfit.AccesoDatos.Conexion;
 import com.citious.converfit.AccesoDatos.Post;
 import com.citious.converfit.AccesoDatos.Sqlite.ConversationsSqlite;
 import com.citious.converfit.AccesoDatos.Sqlite.TimeLineSqlite;
 import com.citious.converfit.Actividades.Conversations.ListMessagesAcitity;
-import com.citious.converfit.Adapters.UserTimeLineAdapter;
+import com.citious.converfit.Actividades.Details.MyCustomDialog;
 import com.citious.converfit.Contenedores.TabContenedoraActivity;
-import com.citious.converfit.Models.TimeLineModel;
 import com.citious.converfit.R;
 import com.citious.converfit.Utils.Utils;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class UserTimeLine extends ActionBarActivity {
+public class UserTimeLine extends AppCompatActivity {
 
     Context miContext;
     TimeLineSqlite accesoDatos;
     String userKey, userName,htmlResult;
     WebView miWebView;
+    boolean mostrarGooglePlay = false;
+    String tituloAlert = "";
+    String mensajeError = "";
+    boolean desloguear = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,32 +93,48 @@ public class UserTimeLine extends ActionBarActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            miWebView.loadDataWithBaseURL(null,htmlResult,"text/html","utf-8",null);
+            if(mensajeError.length() > 0){
+                mostrarAlerta();
+            }else {
+                miWebView.loadDataWithBaseURL(null,htmlResult,"text/html","utf-8",null);
+            }
         }
 
         public void getInfoServidor() {
             String url = Utils.devolverURLservidor("brands");
             String sessionKey = Utils.obtenerSessionKey(miContext);
 
-            List<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("action", "user_data"));
-            pairs.add(new BasicNameValuePair("session_key", sessionKey));
-            pairs.add(new BasicNameValuePair("user_key", userKey));
-            pairs.add(new BasicNameValuePair("app", Utils.app));
-
-            Post post = new Post();
             try {
-                JSONObject datos = post.getServerData(url, pairs);
+                Map<String, Object> stringMap = new HashMap<>();
+                stringMap.put("action", "user_data");
+                stringMap.put("session_key", sessionKey);
+                stringMap.put("brand_user_key", userKey);
+                stringMap.put("app", Utils.app);
+                JSONObject datos = Post.getServerData(stringMap,"POST",url);
                 if (datos != null && datos.length() > 0) {
                     // Para cada registro obtenido se extraen sus campos
                     String resultado = datos.getString("result");
                     if (resultado.equalsIgnoreCase("true")) {
 
                     } else {
+                        String codigoError = datos.getString("error_code");
+                        desloguear = Utils.comprobarDesloguear(codigoError);
+                        String[] error = new Utils().devolverStringError(miContext,codigoError);
+                        tituloAlert = error[0];
+                        mensajeError = error[1];
                     }
+                }else{
+                    String codigoError = getResources().getString(R.string.default_error);
+                    String[] error = new Utils().devolverStringError(miContext,codigoError);
+                    tituloAlert = error[0];
+                    mensajeError = error[1];
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                String codigoError = getResources().getString(R.string.default_error);
+                String[] error = new Utils().devolverStringError(miContext,codigoError);
+                tituloAlert = error[0];
+                mensajeError = error[1];
             }
         }
     }
@@ -137,5 +152,34 @@ public class UserTimeLine extends ActionBarActivity {
         miListMessagesIntent.putExtra("brandName", userName);
         miListMessagesIntent.putExtra("userkey", userKey);
         miContext.startActivity(miListMessagesIntent);
+    }
+
+    private void mostrarAlerta(){
+        MyCustomDialog miConstructor = new MyCustomDialog(miContext, tituloAlert, mensajeError);
+        String tituloBoton = getResources().getString(R.string.aceptar_alert);
+        mostrarGooglePlay = false;
+        if(mensajeError.equalsIgnoreCase(getResources().getString(R.string.app_version_error))){
+            mostrarGooglePlay = true;
+            tituloBoton = getResources().getString(R.string.google_play);
+        }
+        // Definimos el botón y sus acciones
+        AlertDialog dialog = miConstructor.setNegativeButton(tituloBoton, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                mensajeError = "";
+                dialog.cancel();// se cancela la ventana
+                if (desloguear) {
+                    desloguear = false;
+                    Utils.desLoguear(miContext);
+                    finish();
+                }else if(mostrarGooglePlay){
+                    final String appPackageName = getPackageName();
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("market://details?id=" + appPackageName));
+                    startActivity(intent);
+                }
+            }
+        }).show();
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(16);
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.Rojo));
     }
 }

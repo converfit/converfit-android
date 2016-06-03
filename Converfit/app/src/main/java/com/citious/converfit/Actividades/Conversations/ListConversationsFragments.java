@@ -33,12 +33,11 @@ import com.citious.converfit.Contenedores.TabContenedoraActivity;
 import com.citious.converfit.Models.ConversationModel;
 import com.citious.converfit.R;
 import com.citious.converfit.Utils.Utils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import static com.citious.converfit.Utils.UtilidadesGCM.DISPLAY_MESSAGE_ACTION;
 
 public class ListConversationsFragments extends Fragment {
@@ -352,18 +351,16 @@ public class ListConversationsFragments extends Fragment {
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = Utils.devolverURLservidor("conversations");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "list_conversations"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("conversations_last_update", String.valueOf(Utils.obtenerConversationsLastUpdate(miContext))));
-        pairs.add(new BasicNameValuePair("offset", String.valueOf(offSet)));
-        pairs.add(new BasicNameValuePair("limit", String.valueOf(limit)));
-        pairs.add(new BasicNameValuePair("app_version", Utils.appVersion));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "list_conversations");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("conversations_last_update", String.valueOf(Utils.obtenerConversationsLastUpdate(miContext)));
+            stringMap.put("offset", String.valueOf(offSet));
+            stringMap.put("limit", String.valueOf(limit));
+            stringMap.put("app_version", Utils.appVersion);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");
@@ -422,15 +419,13 @@ public class ListConversationsFragments extends Fragment {
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = Utils.devolverURLservidor("conversations");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "delete_conversation"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("conversation_key", conversationKey));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "delete_conversation");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("conversation_key", conversationKey);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");
@@ -497,16 +492,14 @@ public class ListConversationsFragments extends Fragment {
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = Utils.devolverURLservidor("conversations");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "get_conversation"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("last_update", "0"));
-        pairs.add(new BasicNameValuePair("conversation_key", pushConversationKey));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "get_conversation");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("last_update", "0");
+            stringMap.put("conversation_key", pushConversationKey);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");

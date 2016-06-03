@@ -22,11 +22,9 @@ import com.citious.converfit.Actividades.Details.MyCustomDialog;
 import com.citious.converfit.Contenedores.TabContenedoraActivity;
 import com.citious.converfit.R;
 import com.citious.converfit.Utils.Utils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WelcomeActivity extends Activity {
 
@@ -221,18 +219,16 @@ public class WelcomeActivity extends Activity {
         String deviceKey = Utils.obtenerDeviceKey(miContext);
         String url = Utils.devolverURLservidor("access");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "login"));
-        pairs.add(new BasicNameValuePair("email", email));
-        pairs.add(new BasicNameValuePair("password", password));
-        pairs.add(new BasicNameValuePair("device_key", deviceKey));
-        pairs.add(new BasicNameValuePair("system", sistema));
-        pairs.add(new BasicNameValuePair("app_version", Utils.appVersion));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "login");
+            stringMap.put("email", email);
+            stringMap.put("password", password);
+            stringMap.put("device_key", deviceKey);
+            stringMap.put("system", sistema);
+            stringMap.put("app_version", Utils.appVersion);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");

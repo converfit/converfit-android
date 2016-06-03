@@ -1,108 +1,99 @@
 package com.citious.converfit.AccesoDatos;
 
+import android.net.Uri;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.InputStream;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.util.List;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Post {
 
-    private InputStream is = null;
-    private String respuesta = "";
-
-    //Recoge los parámetros adecuados para la ejecución del script indicado en la URL
-    public JSONObject getServerData(String URL, List<NameValuePair> params)
-            throws Exception {
-        JSONObject jObject = null;
+    public static JSONObject getServerData(Map<String, Object> paramsMap, String method, String apiAddress) throws Exception {
+        String requestBody = buildPostPutParameters(paramsMap);
         try {
-            conectaPost(URL, params);
-            getRespuestaPost();
-            jObject = getJsonArray();
-            return jObject;
+            String responseServerString = makeRequest(method, apiAddress, null, "application/x-www-form-urlencoded",requestBody);
+            return returnJsonServer(responseServerString);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    private void conectaPost(String URL, List<NameValuePair> params) throws Exception {
-        HttpClient httpclient = null;
-        HttpPost httppost = null;
-        HttpResponse response = null;
-        HttpEntity entity = null;
-        try {
-            httpclient = new DefaultHttpClient();
-            httppost = new HttpPost(URL);
-            try{
-                httppost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-                response = httpclient.execute(httppost);
-            }catch (Exception e){
-            }
-            if (response != null) {
-                entity = response.getEntity();
-            }
-            if (entity != null) {
-                is = entity.getContent();
-            }
-        } catch (Exception e) {
-            throw new Exception("Error al conectar con el servidor. ");
-        } finally {
-            if (entity != null) {
-                entity = null;
-            }
-            if (response != null) {
-                response = null;
-            }
-            if (httppost != null) {
-                httppost = null;
-            }
-            if (httpclient != null) {
-                httpclient = null;
+    public static String buildPostPutParameters(Object content){
+        String output = null;
+        if ((content instanceof String) ||
+                (content instanceof JSONObject) ||
+                (content instanceof JSONArray)) {
+            output = content.toString();
+        } else if (content instanceof Map) {
+            Uri.Builder builder = new Uri.Builder();
+            HashMap hashMap = (HashMap) content;
+            if (hashMap != null) {
+                Iterator entries = hashMap.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry entry = (Map.Entry) entries.next();
+                    builder.appendQueryParameter(entry.getKey().toString(), entry.getValue().toString());
+                    entries.remove(); // avoids a ConcurrentModificationException
+                }
+                output = builder.build().getEncodedQuery();
             }
         }
+        return output;
     }
 
-    //Para obtener la respuesta enviada por el script PHP, es llamado desde esta clase
-    private void getRespuestaPost() throws Exception {
-        BufferedReader reader = null;
+    public static String makeRequest(String method, String apiAddress, String accessToken, String mimeType, String requestBody) throws Exception {
         try {
-            reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
-            StringBuilder sb = new StringBuilder();
+            URL url = new URL(apiAddress);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(!method.equals("GET"));
+            urlConnection.setRequestMethod(method);
+
+            //urlConnection.setRequestProperty("Authorization", "Bearer " + accessToken);
+
+            urlConnection.setRequestProperty("Content-Type", mimeType);
+            OutputStream outputStream = new BufferedOutputStream(urlConnection.getOutputStream());
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "utf-8"));
+            writer.write(requestBody);
+            writer.flush();
+            writer.close();
+            outputStream.close();
+
+            urlConnection.connect();
+
+            //////////////////////////////
+            BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+            StringBuilder responseOutput = new StringBuilder();
+            System.out.println("output===============" + br);
+            while((line = br.readLine()) != null ) {
+                responseOutput.append(line);
             }
-            is.close();
-            respuesta = sb.toString();
-        } catch (Exception e) {
-            throw new Exception("Error al recuperar las imágenes del servidor. ");
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
+            br.close();
+
+            urlConnection.disconnect();
+            return responseOutput.toString();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new Exception("Error al conectar con el servidor. ");
         }
     }
 
-    //Para recuperar los datos JSON enviados por el script, es llamado desde esta clase
-    @SuppressWarnings("finally")
-    private JSONObject getJsonArray() throws Exception {
-        JSONObject jObjet = null;
+    public static JSONObject returnJsonServer(String responseServer) throws Exception {
         try {
-            jObjet = new JSONObject(respuesta);
+            return new JSONObject(responseServer);
         } catch (Exception e) {
             throw new Exception("Error al convertir a JSonArray. ");
-        } finally {
-            return jObjet;
         }
     }
-
 }

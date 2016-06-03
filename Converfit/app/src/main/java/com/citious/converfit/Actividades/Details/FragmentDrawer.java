@@ -25,9 +25,6 @@ import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import java.util.ArrayList;
-import java.util.List;
 import com.citious.converfit.AccesoDatos.Post;
 import com.citious.converfit.AccesoDatos.Sqlite.UserSqlite;
 import com.citious.converfit.Adapters.NavigationDrawerAdapter;
@@ -36,10 +33,12 @@ import com.citious.converfit.Models.NavDraweItem;
 import com.citious.converfit.Models.UserModel;
 import com.citious.converfit.R;
 import com.citious.converfit.Utils.Utils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FragmentDrawer extends Fragment {
 
@@ -324,18 +323,16 @@ public class FragmentDrawer extends Fragment {
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = Utils.devolverURLservidor("brands");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "list_users"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("users_last_update", String.valueOf(Utils.obtenerFavoritoLastUpdate(miContext))));
-        pairs.add(new BasicNameValuePair("offset", "0"));
-        pairs.add(new BasicNameValuePair("limit", "1000"));
-        pairs.add(new BasicNameValuePair("app_version", Utils.appVersion));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "list_users");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("users_last_update", String.valueOf(Utils.obtenerFavoritoLastUpdate(miContext)));
+            stringMap.put("offset", "0");
+            stringMap.put("limit", "1000");
+            stringMap.put("app_version", Utils.appVersion);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");
@@ -408,13 +405,11 @@ public class FragmentDrawer extends Fragment {
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = Utils.devolverURLservidor("webchat");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "brand_webchat_status"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "brand_webchat_status");
+            stringMap.put("session_key", sessionKey);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");
@@ -544,14 +539,12 @@ public class FragmentDrawer extends Fragment {
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = Utils.devolverURLservidor("webchat");
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "update_brand_webchat_status"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("webchat_status", accionActivarDesactivar));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "update_brand_webchat_status");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("webchat_status", accionActivarDesactivar);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");

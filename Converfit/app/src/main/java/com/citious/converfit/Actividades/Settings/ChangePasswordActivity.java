@@ -7,8 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,13 +23,11 @@ import com.citious.converfit.AccesoDatos.Post;
 import com.citious.converfit.Actividades.Details.MyCustomDialog;
 import com.citious.converfit.R;
 import com.citious.converfit.Utils.Utils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ChangePasswordActivity extends ActionBarActivity {
+public class ChangePasswordActivity extends AppCompatActivity {
 
     Context miContext;
     EditText miEdtNewPass, miEdtOldPass;
@@ -241,17 +239,15 @@ public class ChangePasswordActivity extends ActionBarActivity {
 
         String sessionKey = Utils.obtenerSessionKey(miContext);
 
-        List<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("action", "update_password"));
-        pairs.add(new BasicNameValuePair("session_key", sessionKey));
-        pairs.add(new BasicNameValuePair("old_password", passOld));
-        pairs.add(new BasicNameValuePair("new_password", passNew));
-        pairs.add(new BasicNameValuePair("app_version", Utils.appVersion));
-        pairs.add(new BasicNameValuePair("app", Utils.app));
-
-        Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "update_password");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("old_password", passOld);
+            stringMap.put("new_password", passNew);
+            stringMap.put("app_version", Utils.appVersion);
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");

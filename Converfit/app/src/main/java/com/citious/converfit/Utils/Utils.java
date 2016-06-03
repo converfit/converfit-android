@@ -1,8 +1,6 @@
 package com.citious.converfit.Utils;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -20,12 +18,11 @@ import com.citious.converfit.AccesoDatos.Sqlite.TimeLineSqlite;
 import com.citious.converfit.AccesoDatos.Sqlite.UserSqlite;
 import com.citious.converfit.Actividades.UserAcces.WelcomeActivity;
 import com.citious.converfit.R;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -508,7 +505,7 @@ public class Utils {
         String sessionKey = Utils.obtenerSessionKey(miContext);
         String url = devolverURLservidor("conversations");
 
-        List<NameValuePair> pairs = new ArrayList<>();
+        /*List<NameValuePair> pairs = new ArrayList<>();
         pairs.add(new BasicNameValuePair("action", "update_conversation_flag"));
         pairs.add(new BasicNameValuePair("session_key", sessionKey));
         pairs.add(new BasicNameValuePair("conversation_key", conversationKey));
@@ -517,7 +514,15 @@ public class Utils {
 
         Post post = new Post();
         try {
-            JSONObject datos = post.getServerData(url, pairs);
+            JSONObject datos = post.getServerData(url, pairs);*/
+        try {
+            Map<String, Object> stringMap = new HashMap<>();
+            stringMap.put("action", "update_conversation_flag");
+            stringMap.put("session_key", sessionKey);
+            stringMap.put("conversation_key", conversationKey);
+            stringMap.put("new_message_flag", "0");
+            stringMap.put("app", Utils.app);
+            JSONObject datos = Post.getServerData(stringMap,"POST",url);
             if (datos != null && datos.length() > 0) {
                 // Para cada registro obtenido se extraen sus campos
                 String resultado = datos.getString("result");

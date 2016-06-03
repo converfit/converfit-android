@@ -1,8 +1,14 @@
 package com.citious.converfit.Models;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Base64;
+
+import com.citious.converfit.R;
+import com.citious.converfit.Utils.AddFilesToDisk;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
@@ -19,7 +25,7 @@ public class MensajeModel {
     String fname = "";
     String lname = "";
 
-    public MensajeModel(JSONObject aDict, String conversationKey) {
+    public MensajeModel(JSONObject aDict, String conversationKey, Context miContext) {
 
         try {
             this.conversationKey = conversationKey;
@@ -28,7 +34,8 @@ public class MensajeModel {
             this.type = aDict.getString("type");
             String contenido = aDict.getString("content");
             if(this.type.equalsIgnoreCase("jpeg_base64")){
-                this.content = redimensionarImagen(contenido);
+                //this.content = redimensionarImagen(contenido);
+                this.content = AddFilesToDisk.crearFichero(messageKey, type, contenido, miContext);
             }else{
                 this.content = contenido;
             }
@@ -42,9 +49,15 @@ public class MensajeModel {
         }
     }
 
-    public MensajeModel(String messageKey, String content, String created, String sender, String type, String conversationKey, boolean enviado, String fname, String lname) {
+    public MensajeModel(String messageKey, String content, String created, String sender, String type, String conversationKey, boolean enviado, String fname, String lname, Context miContext) {
         this.messageKey = messageKey;
-        this.content = content;
+        //this.content = content;
+        boolean contentUrl = content.startsWith(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + miContext.getResources().getString(R.string.app_name) + "/");
+        if((type.equalsIgnoreCase("jpeg_base64") || type.equalsIgnoreCase("mp4_base64"))&& !contentUrl){
+            this.content = AddFilesToDisk.crearFichero(messageKey, type, content, miContext);
+        }else{
+            this.content = content;
+        }
         this.created = created;
         this.sender = sender;
         this.type = type;
