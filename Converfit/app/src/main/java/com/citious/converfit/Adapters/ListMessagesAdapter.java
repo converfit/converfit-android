@@ -3,9 +3,8 @@ package com.citious.converfit.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.text.Html;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.citious.converfit.Actividades.Conversations.ListMessagesAcitity;
 import com.citious.converfit.Actividades.Conversations.MostrarImagenActivity;
@@ -23,7 +23,6 @@ import com.citious.converfit.R;
 import com.citious.converfit.Utils.AddFilesToDisk;
 import com.citious.converfit.Utils.Utils;
 import java.util.ArrayList;
-import static com.citious.converfit.Utils.Utils.avatarString;
 
 public class ListMessagesAdapter extends BaseAdapter {
 
@@ -49,6 +48,15 @@ public class ListMessagesAdapter extends BaseAdapter {
         this.miHeader = miHeader;
         this.miEdt = miEdt;
         this.userKey = userKey;
+    }
+
+    class ViewHolder
+    {
+        ImageView imagenGrande;
+        ImageView playImage;
+        Button botonReenviar;
+        int position;
+        ProgressBar cargando;
     }
 
     @Override
@@ -100,12 +108,33 @@ public class ListMessagesAdapter extends BaseAdapter {
         final MensajeModel item = messageList.get(position);
 
         int type = getItemViewType(position);
+        ViewHolder holder;
 
         if (type == VIEW_TYPE_ROW_1) {          //Imagen Usuario
             if(convertView == null){
                 convertView = inflater.inflate(R.layout.imagen_usuario,null);
+                holder = new ViewHolder();
+                holder.imagenGrande = (ImageView)convertView.findViewById(R.id.img_imagen_usuario);
+                holder.botonReenviar = (Button) convertView.findViewById(R.id.btn_reenviar_mensaje_imagen);
+                holder.position = position;
+                holder.cargando = (ProgressBar) convertView.findViewById(R.id.spinner_imagen_usuario);
+                holder.botonReenviar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new ListMessagesAcitity().reenviarMensajes(miContext, item.getConversationKey(), userKey, miListView, miHeader, miEdt);
+                    }
+                });
+                if(item.isEnviado()){
+                    holder.botonReenviar.setVisibility(View.GONE);
+                }else{
+                    holder.botonReenviar.setVisibility(View.VISIBLE);
+                }
+                convertView.setTag(holder);
+            }else{
+                holder = (ViewHolder) convertView.getTag();
             }
-            ImageView miImage = (ImageView) convertView.findViewById(R.id.img_imagen_usuario);
+            CreateThumbnals threadCrearThumbnals = new CreateThumbnals();
+            threadCrearThumbnals.execute(holder,item,position);
             /*byte[] decodedString = Base64.decode(item.getContent(), Base64.DEFAULT);
             Bitmap foto = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             miImage.setImageBitmap(foto);
@@ -117,6 +146,7 @@ public class ListMessagesAdapter extends BaseAdapter {
                     miContext.startActivity(miDetalleImagenInten);
                 }
             });*/
+            /*
             final String pathMiImagen = item.getContent();
             Bitmap foto =  AddFilesToDisk.decodeSampledBitmapFromFile(pathMiImagen, 160, 160);
             miImage.setImageBitmap(foto);
@@ -142,7 +172,7 @@ public class ListMessagesAdapter extends BaseAdapter {
                 miBtnReenviarImagen.setVisibility(View.GONE);
             }else{
                 miBtnReenviarImagen.setVisibility(View.VISIBLE);
-            }
+            }*/
         }else if (type == VIEW_TYPE_ROW_2) {    //Texto Usuario
             if(convertView == null) {
                 convertView = inflater.inflate(R.layout.texto_mensaje_usuario, null);
@@ -172,30 +202,17 @@ public class ListMessagesAdapter extends BaseAdapter {
         }else if (type == VIEW_TYPE_ROW_3){     //Imagen Otro Usuario
             if(convertView == null){
                 convertView = inflater.inflate(R.layout.imagen_otro_usuario,null);
+                holder = new ViewHolder();
+                holder.imagenGrande = (ImageView)convertView.findViewById(R.id.img_imagen_otro_usuario);
+                holder.position = position;
+                holder.cargando = (ProgressBar) convertView.findViewById(R.id.spinner_imagen_otro_usuario);
+                convertView.setTag(holder);
+            }else{
+                holder = (ViewHolder) convertView.getTag();
             }
-            ImageView miImage = (ImageView) convertView.findViewById(R.id.img_imagen_otro_usuario);
-            /*byte[] decodedString = Base64.decode(messageList.get(position).getContent(), Base64.DEFAULT);
-            Bitmap foto = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            miImage.setImageBitmap(foto);
-            miImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent miDetalleImagenInten = new Intent(miContext, MostrarImagenActivity.class);
-                    avatarString = item.getContent();
-                    miContext.startActivity(miDetalleImagenInten);
-                }
-            });*/
-            final String pathMiImagen = item.getContent();
-            Bitmap foto =  AddFilesToDisk.decodeSampledBitmapFromFile(pathMiImagen, 160, 160);
-            miImage.setImageBitmap(foto);
-            miImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent miDetalleImagenInten = new Intent(miContext, MostrarImagenActivity.class);
-                    miDetalleImagenInten.putExtra("url_imagen", item.getContent());
-                    miContext.startActivity(miDetalleImagenInten);
-                }
-            });
+
+            CreateThumbnals threadCrearThumbnals = new CreateThumbnals();
+            threadCrearThumbnals.execute(holder,item,position);
 
         }else if (type == VIEW_TYPE_ROW_4){     //Texto Otro usuario
             if(convertView == null) {
@@ -258,5 +275,37 @@ public class ListMessagesAdapter extends BaseAdapter {
             });
             }
         return convertView;
+    }
+    public class CreateThumbnals extends AsyncTask<Object, Void, Bitmap> {
+        private ViewHolder v;
+        MensajeModel item;
+        int posicion;
+
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+            v = (ViewHolder)params[0];
+            item = (MensajeModel) params[1];
+            posicion = (int)params[2];
+            final String pathMiImagen = item.getContent();
+            return AddFilesToDisk.decodeSampledBitmapFromFile(pathMiImagen, 160, 160);
+        }
+
+        //Se ecuta al finalizar el thread
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            // Oculto la ventana de espera de conexión
+            if (v.position == posicion) {
+                v.imagenGrande.setImageBitmap(result);
+                v.imagenGrande.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent miDetalleImagenInten = new Intent(miContext, MostrarImagenActivity.class);
+                        miDetalleImagenInten.putExtra("url_imagen", item.getContent());
+                        miContext.startActivity(miDetalleImagenInten);
+                    }
+                });
+                v.cargando.setVisibility(View.GONE);
+            }
+        }
     }
 }

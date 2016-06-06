@@ -13,14 +13,27 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp">
-        <ImageView
+        <RelativeLayout
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:id="@+id/img_imagen_usuario"
-            android:clickable="true"
-            android:scaleType="centerCrop"
-            android:background="@drawable/shape_usuario"
-            android:layout_marginRight="3dp"/>
+            android:layout_marginRight="3dp">
+            <ImageView
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:id="@+id/img_imagen_usuario"
+                android:clickable="true"
+                android:scaleType="centerCrop"
+                android:background="@drawable/shape_usuario"
+                android:layout_marginRight="3dp"/>
+            <ProgressBar
+                android:id="@+id/spinner_imagen_usuario"
+                android:layout_height="50dp"
+                android:layout_width="50dp"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:indeterminateTint="@color/Negro"
+                android:indeterminateTintMode="src_atop"/>
+        </RelativeLayout>
         <Button
             android:layout_width="20dp"
             android:layout_height="20dp"

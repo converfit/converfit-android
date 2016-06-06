@@ -1,19 +1,15 @@
 package com.citious.converfit.Actividades.Conversations;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import com.citious.converfit.R;
-import static com.citious.converfit.Utils.Utils.avatarString;
 
-public class MostrarImagenActivity extends ActionBarActivity {
+public class MostrarImagenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +31,11 @@ public class MostrarImagenActivity extends ActionBarActivity {
         String html="<html><body class='text-align:center; margin:10px'>" +
                 "<img style='width:100%;' src='{IMAGE_URL}' />" +
                 "</body></html>";
-        String image = "data:image/png;base64," + avatarString;
+        String urlImagen = getIntent().getStringExtra("url_imagen");
 
         // Use image for the img src parameter in your html and load to webview
-        html = html.replace("{IMAGE_URL}", image);
-        miWebView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", "");
+        html = html.replace("{IMAGE_URL}", urlImagen);
+        miWebView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", "");;
 
     }
 
@@ -64,10 +60,5 @@ public class MostrarImagenActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public Bitmap decodificarImagen(){
-        byte[] decodedString = Base64.decode(avatarString, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }
