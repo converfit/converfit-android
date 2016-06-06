@@ -135,44 +135,6 @@ public class ListMessagesAdapter extends BaseAdapter {
             }
             CreateThumbnals threadCrearThumbnals = new CreateThumbnals();
             threadCrearThumbnals.execute(holder,item,position);
-            /*byte[] decodedString = Base64.decode(item.getContent(), Base64.DEFAULT);
-            Bitmap foto = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            miImage.setImageBitmap(foto);
-            miImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent miDetalleImagenInten = new Intent(miContext, MostrarImagenActivity.class);
-                    avatarString = item.getContent();
-                    miContext.startActivity(miDetalleImagenInten);
-                }
-            });*/
-            /*
-            final String pathMiImagen = item.getContent();
-            Bitmap foto =  AddFilesToDisk.decodeSampledBitmapFromFile(pathMiImagen, 160, 160);
-            miImage.setImageBitmap(foto);
-            miImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent miDetalleImagenInten = new Intent(miContext, MostrarImagenActivity.class);
-                    miDetalleImagenInten.putExtra("url_imagen", item.getContent());
-                    miContext.startActivity(miDetalleImagenInten);
-                }
-            });
-
-            //Boton reenviar texto
-            final Button miBtnReenviarImagen = (Button) convertView.findViewById(R.id.btn_reenviar_mensaje_imagen);
-            miBtnReenviarImagen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new ListMessagesAcitity().reenviarMensajes(miContext, item.getConversationKey(), userKey, miListView, miHeader, miEdt);
-                }
-            });
-
-            if(item.isEnviado()){
-                miBtnReenviarImagen.setVisibility(View.GONE);
-            }else{
-                miBtnReenviarImagen.setVisibility(View.VISIBLE);
-            }*/
         }else if (type == VIEW_TYPE_ROW_2) {    //Texto Usuario
             if(convertView == null) {
                 convertView = inflater.inflate(R.layout.texto_mensaje_usuario, null);
